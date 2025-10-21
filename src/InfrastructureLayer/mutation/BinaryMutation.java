@@ -40,6 +40,19 @@ public class BinaryMutation implements MutationStrategy<Integer> {
     // --- Extended Bit-Flipping Mutation Method Will Add Soon ---
     @Override
     public Chromosome<Integer> mutateSecondMethod(Chromosome<Integer> chromosome, double mutationRate) {
+        List<Integer> genes = new ArrayList<>(chromosome.getGenes());
+
+        if (rand.nextDouble() < mutationRate && genes.size() > 2) {
+            int start = rand.nextInt(genes.size());
+            int blockSize = rand.nextInt(Math.max(1, genes.size() / 4)) + 1;
+
+            for (int i = 0; i < blockSize; i++) {
+                int index = (start + i) % genes.size();
+                genes.set(index, genes.get(index) == 0 ? 1 : 0);
+            }
+        }
+
+        return new BinaryChromosomeFromGenes(genes);
 
     }
 
