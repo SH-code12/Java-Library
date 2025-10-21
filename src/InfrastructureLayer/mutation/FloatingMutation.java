@@ -39,7 +39,23 @@ public class FloatingMutation implements MutationStrategy<Double> {
     // --- Non-Uniform Mutation ---
     @Override
     public Chromosome<Double> mutateSecondMethod(Chromosome<Double> chromosome, double mutationRate) {
+        List<Double> genes = new ArrayList<>(chromosome.getGenes());
+        List<Double> mutatedGenes = new ArrayList<>();
+// shape parameter controlling how non-uniform the change is
+        double b = 5.0;
 
+        for (double value : genes) {
+            if (rand.nextDouble() < mutationRate) {
+                double u = rand.nextDouble();
+                double delta = Math.pow(1 - u, b) * (rand.nextBoolean() ? 1 : -1);
+                mutatedGenes.add(value + delta);
+            } else {
+                mutatedGenes.add(value);
+            }
+        }
+
+        return new FloatingChromosomeFromGenes(mutatedGenes);
+    }
 
 }
 
