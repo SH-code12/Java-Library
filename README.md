@@ -25,8 +25,12 @@ The GA is designed to be **generic**, **configurable**, and **extensible**, supp
     - Integer Chromosome
     - Floating-Point Chromosome
 - **Selection Methods** (at least two):
-
+    - Roulette Wheel Selection
+    - Tournament Selection
 - **Crossover Methods** (at least three):
+    - N-point CrossOver
+    - Uniform CrossOver
+    - Order-1 CrossOver 
 
 - **Mutation Methods** (for each chromosome type):
 
