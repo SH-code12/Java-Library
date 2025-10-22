@@ -1,6 +1,7 @@
 package InfrastructureLayer.chromosome;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
@@ -12,7 +13,7 @@ public class FloatingChromosome extends Chromosome<Double> {
     private int maxRoom;
 
     public FloatingChromosome(int numberOfCourses, int maxSlot, int maxRoom) {
-        super(new ArrayList<>());
+        super(new ArrayList<>(), 0.0);
         this.numberOfCourses = numberOfCourses;
         this.maxSlot = maxSlot;
         this.maxRoom = maxRoom;
@@ -31,6 +32,19 @@ public class FloatingChromosome extends Chromosome<Double> {
 
     public int ChromosomeLength() {
         return 2 * numberOfCourses;
+    }
+
+    @Override
+    public Chromosome<Double> createNew(List<Double> genes) {
+        FloatingChromosome newChromosome = new FloatingChromosome(numberOfCourses, maxSlot, maxRoom);
+        newChromosome.setGenes(genes);
+        return newChromosome;
+    }
+
+    @Override
+    public void calculateFitnessValue() {
+        Random rand = new Random();
+        this.setFitness(rand.nextDouble());
     }
 
 }
