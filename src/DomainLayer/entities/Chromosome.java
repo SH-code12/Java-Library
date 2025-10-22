@@ -20,5 +20,6 @@ public abstract class Chromosome<T>{
     public abstract void initializeGenes();
     
     public abstract int ChromosomeLength();
+    public abstract double getFitness();
 
 }
