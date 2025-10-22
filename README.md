@@ -10,7 +10,6 @@ The goal of the library is to provide modular and reusable implementations of ma
 Each phase adds one soft computing component and demonstrates it through a **real-world case study**.
 
 This document covers **Phase 1: Genetic Algorithm (GA)**.
-
 ---
 
 ## ⚙️ Phase 1: Genetic Algorithm (GA)
