@@ -27,6 +27,7 @@ public abstract class Chromosome<T>{
     public abstract void initializeGenes();
     
     public abstract int ChromosomeLength();
+    public abstract double getFitness();
 
     public abstract Chromosome<T> createNew(List<T> genes); 
 
