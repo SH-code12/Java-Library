@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
+import DomainLayer.interfaces.SelectionStrategy;
 
-public class RouletteWheelSelection<T extends Chromosome<?>> {
+public class RouletteWheelSelection<T extends Chromosome<?>>implements SelectionStrategy {
 
     private List<T> searchSpace;
     private List<T> matingPool = new ArrayList<>();
@@ -41,7 +42,7 @@ public class RouletteWheelSelection<T extends Chromosome<?>> {
         return randoms;
     }
 
-    private void select() {
+    public List<T> select() {
         int n = searchSpace.size();
         List<Double> cumulativeRange = calculateCumulativeRange(searchSpace);
         List<Double> randoms = generateRandoms(n);
@@ -54,6 +55,7 @@ public class RouletteWheelSelection<T extends Chromosome<?>> {
                 }
             }
         }
+        return matingPool;
     }
 
     public List<T> getMatingPool() {

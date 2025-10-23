@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
+import DomainLayer.interfaces.SelectionStrategy;
 
-public class TournametSelection<T extends Chromosome<?>> {
+public class TournametSelection<T extends Chromosome<?>> implements SelectionStrategy {
 
     private List<T> searchSpace;
-    int tournametSize;
+    int tournametSize =0;
     private List<T> matingPool = new ArrayList<>();
 
     public TournametSelection(List<T> searchSpace, int tournametSize) {
@@ -19,10 +20,13 @@ public class TournametSelection<T extends Chromosome<?>> {
         if (tournametSize <= 0 || tournametSize > n) {
             throw new IllegalArgumentException("Tournament size must be between 1 and population size");
         }
-        this.select(tournametSize);
+        this.select();
     }
 
-    private void select(int tournametSize) {
+    public List<T> select() {
+        if(tournametSize==0){
+            throw new IllegalArgumentException("Tournament size must be between 1 and population size");
+        }
         Random rand = new Random();
         int n = searchSpace.size();
         for (int i = 0; i < n; ++i) {
@@ -35,6 +39,8 @@ public class TournametSelection<T extends Chromosome<?>> {
             }
             matingPool.add(best);
         }
+        return matingPool;
+
 
     }
 
