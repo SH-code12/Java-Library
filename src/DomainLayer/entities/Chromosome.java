@@ -19,7 +19,7 @@ public abstract class Chromosome<T>{
         this.genes = genes;
     }
     public void setFitness(double fitness){
-        this.fitness = fitness ; 
+        this.fitness = fitness ;
     }
     public double getFitness(){
         return this.fitness;

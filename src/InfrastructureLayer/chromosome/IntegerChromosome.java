@@ -1,12 +1,13 @@
 package InfrastructureLayer.chromosome;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
 
-public class IntegerChromosome extends Chromosome<Integer> {
+public class IntegerChromosome extends Chromosome<Integer>  {
     private int numberOfCourses;
     private int maxSlot;
     private int maxRoom;
