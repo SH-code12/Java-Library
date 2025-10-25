@@ -166,7 +166,7 @@ public class GeneticAlgorithm <G, T extends Chromosome<G>> {
 
                   for (T c : newGen){
 
-                      mutationStrategy.mutateFirstMethod((Chromosome<G>) c,mutationRate);
+                      mutationStrategy.mutate((Chromosome<G>) c,mutationRate);
                       children.add(c);
 
                   }

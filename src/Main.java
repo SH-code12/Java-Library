@@ -1,14 +1,11 @@
 import ApplicationLayer.services.GeneticAlgorithm;
-import DomainLayer.entities.Chromosome;
 import DomainLayer.entities.Population;
-import DomainLayer.interfaces.MutationStrategy;
 import InfrastructureLayer.chromosome.IntegerChromosome;
 import InfrastructureLayer.crossover.NPointCrossover;
 import InfrastructureLayer.fitness.FitnessFunction;
-import InfrastructureLayer.mutation.IntegerMutation;
+import InfrastructureLayer.mutation.Integer_Swap;
 import InfrastructureLayer.replacement.GenerationalReplacement;
 import InfrastructureLayer.selection.RouletteWheelSelection;
-import PresentationLayer.timetable.TimetableChromosome;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +41,7 @@ public class Main {
 
         RouletteWheelSelection rouletteWheelSelection = new RouletteWheelSelection<>(searchSpace);
         NPointCrossover nPointCrossover = new NPointCrossover<>(searchSpace);
-        IntegerMutation integerMutation = new IntegerMutation();
+        Integer_Swap integerMutation = new Integer_Swap();
 
         GenerationalReplacement generationalReplacement = new
                 GenerationalReplacement();
@@ -75,9 +72,6 @@ public class Main {
         } catch (IllegalStateException e) {
             System.err.println("Configuration Error: " + e.getMessage());
         }
-
-
-
 
 
     }

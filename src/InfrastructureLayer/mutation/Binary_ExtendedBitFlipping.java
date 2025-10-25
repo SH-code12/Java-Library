@@ -1,15 +1,15 @@
 package InfrastructureLayer.mutation;
-//// Two Methods
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
 import DomainLayer.interfaces.MutationStrategy;
 import InfrastructureLayer.chromosome.BinaryChromosome;
 
-public class BinaryMutation implements MutationStrategy<Integer> {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Binary_ExtendedBitFlipping implements MutationStrategy<Integer>{
+
     private final Random rand = new Random();
 
     // Helper class:  wrapper to reuse BinaryChromosome structure
@@ -20,26 +20,10 @@ public class BinaryMutation implements MutationStrategy<Integer> {
         }
     }
 
-    // --- Bit-wise Mutation Method ---
-    @Override
-    public Chromosome<Integer> mutateFirstMethod(Chromosome<Integer> chromosome, double mutationRate) {
-        List<Integer> oldGenes = chromosome.getGenes();
-        List<Integer> newGenes = new ArrayList<>();
-
-        for (int bit : oldGenes) {
-            if (rand.nextDouble() < mutationRate) {
-                newGenes.add(bit == 0 ? 1 : 0); // Flip bit
-            } else {
-                newGenes.add(bit);
-            }
-        }
-
-        return new BinaryChromosomeFromGenes(newGenes);
-    }
 
     // --- Extended Bit-Flipping Mutation Method Will Add Soon ---
     @Override
-    public Chromosome<Integer> mutateSecondMethod(Chromosome<Integer> chromosome, double mutationRate) {
+    public Chromosome<Integer> mutate(Chromosome<Integer> chromosome, double mutationRate) {
         List<Integer> genes = new ArrayList<>(chromosome.getGenes());
 
         if (rand.nextDouble() < mutationRate && genes.size() > 2) {
@@ -57,4 +41,5 @@ public class BinaryMutation implements MutationStrategy<Integer> {
     }
 
 }
+
 
