@@ -50,5 +50,4 @@ public class BinaryChromosome extends Chromosome<Integer> {
         Random rand = new Random();
         this.setFitness(rand.nextDouble());
     }
-
 }

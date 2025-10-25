@@ -17,7 +17,7 @@ public class GeneticAlgorithm <G, T extends Chromosome<G>> {
     private int generationSz = 3000;
     private  double mutationRate = 0.1;
 
-    private IFitnessFunction<T> fitnessFn;
+    private FitnessFunction<T> fitnessFn;
 
     private SelectionStrategy selectionStrategy;
 
@@ -60,7 +60,7 @@ public class GeneticAlgorithm <G, T extends Chromosome<G>> {
         this.pop = new Population<>();
     }
 
-    public GeneticAlgorithm(int populationSz, int generationSz, double mutationRate, IFitnessFunction<T> fitnessFn, SelectionStrategy selectionStrategy, CrossoverStrategy<G, T> crossoverStrategy, MutationStrategy<G> mutationStrategy, ReplacementStrategy<T> replacementStrategy, Population<T> pop, T best, double higherFitValue) {
+    public GeneticAlgorithm(int populationSz, int generationSz, double mutationRate, FitnessFunction<T> fitnessFn, SelectionStrategy selectionStrategy, CrossoverStrategy<G, T> crossoverStrategy, MutationStrategy<G> mutationStrategy, ReplacementStrategy<T> replacementStrategy, Population<T> pop, T best, double higherFitValue) {
         this.populationSz = populationSz;
         this.generationSz = generationSz;
         this.mutationRate = mutationRate;
@@ -98,11 +98,11 @@ public class GeneticAlgorithm <G, T extends Chromosome<G>> {
         this.mutationRate = mutationRate;
     }
 
-    public IFitnessFunction<T> getFitnessFn() {
+    public FitnessFunction<T> getFitnessFn() {
         return fitnessFn;
     }
 
-    public void setFitnessFn(IFitnessFunction<T> fitnessFn) {
+    public void setFitnessFn(FitnessFunction<T> fitnessFn) {
         this.fitnessFn = fitnessFn;
     }
 
@@ -188,7 +188,7 @@ public class GeneticAlgorithm <G, T extends Chromosome<G>> {
 
     private  void getbestSolutionOfgeneration(){
         for(T sol: pop){
-            double fitness = fitnessFn.getFitnessVal(sol);
+            double fitness = fitnessFn.evaluate(sol);
             if(fitness>higherFitValue){
                 higherFitValue = fitness;
                 best = sol;

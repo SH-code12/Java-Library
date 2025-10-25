@@ -2,15 +2,19 @@ package DomainLayer.entities;
 
 import java.util.List;
 
-public abstract class Chromosome<T>{
-    protected List<T> genes; 
-    double fitness ; 
+/**
+ * Generic abstract representation of a chromosome in a Genetic Algorithm.
+ * Supports any type of gene (Integer, Double, Boolean, String, etc.)
+ */
+public abstract class Chromosome<T> {
+    protected List<T> genes;
+    protected double fitness;
 
-    public Chromosome(List<T> genes , double fitness) {
+    public Chromosome(List<T> genes) {
         this.genes = genes;
-        this.fitness = fitness ; 
+        this.fitness = 0.0;
     }
-    
+
     public List<T> getGenes() {
         return genes;
     }
@@ -18,20 +22,25 @@ public abstract class Chromosome<T>{
     public void setGenes(List<T> genes) {
         this.genes = genes;
     }
-    public void setFitness(double fitness){
-        this.fitness = fitness ;
+
+    public double getFitness() {
+        return fitness;
     }
-    public double getFitness(){
-        return this.fitness;
+
+    public void setFitness(double fitness) {
+        this.fitness = fitness;
     }
+
+    /** Randomly initialize genes (domain-specific). */
     public abstract void initializeGenes();
-    
+
+    /** Returns the total number of genes in this chromosome. */
     public abstract int ChromosomeLength();
-    // Sorry Malak
-//    public abstract double getFitness();
 
-    public abstract Chromosome<T> createNew(List<T> genes); 
+    /** Creates a new chromosome instance with the given genes. */
+    public abstract Chromosome<T> createNew(List<T> genes);
 
-    public abstract void calculateFitnessValue( );
-
+    /** Computes the fitness value using a FitnessFunction strategy. */
+    public abstract void calculateFitnessValue();
 }
+
