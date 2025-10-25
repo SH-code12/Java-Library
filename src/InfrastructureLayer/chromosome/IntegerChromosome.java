@@ -1,13 +1,12 @@
 package InfrastructureLayer.chromosome;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import DomainLayer.entities.Chromosome;
 
-public class IntegerChromosome extends Chromosome<Integer>  {
+public class IntegerChromosome extends Chromosome<Integer> {
+
     private int numberOfCourses;
     private int maxSlot;
     private int maxRoom;
@@ -20,6 +19,7 @@ public class IntegerChromosome extends Chromosome<Integer>  {
         initializeGenes();
     }
 
+    @Override
     public void initializeGenes() {
         Random rand = new Random();
         for (int i = 0; i < numberOfCourses; i++) {
@@ -30,6 +30,7 @@ public class IntegerChromosome extends Chromosome<Integer>  {
         }
     }
 
+    @Override
     public int ChromosomeLength() {
         return 2 * numberOfCourses;
     }
@@ -37,16 +38,13 @@ public class IntegerChromosome extends Chromosome<Integer>  {
     @Override
     public Chromosome<Integer> createNew(List<Integer> genes) {
         IntegerChromosome newChromosome = new IntegerChromosome(numberOfCourses, maxSlot, maxRoom);
-        newChromosome.setGenes(genes);
+        newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }
 
     @Override
     public void calculateFitnessValue() {
-         Random rand = new Random();
-        this.setFitness(rand.nextDouble());
+        // Replace with domain-specific function (e.g., conflict count minimization)
+        this.setFitness(new Random().nextDouble());
     }
-
-  
-
 }

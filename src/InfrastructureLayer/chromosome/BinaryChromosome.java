@@ -3,7 +3,6 @@ package InfrastructureLayer.chromosome;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import DomainLayer.entities.Chromosome;
 
 public class BinaryChromosome extends Chromosome<Integer> {
@@ -26,14 +25,16 @@ public class BinaryChromosome extends Chromosome<Integer> {
         initializeGenes();
     }
 
+    @Override
     public void initializeGenes() {
         Random rand = new Random();
-        int totalBits = numberOfCourses * (bitsPerSlot + bitsPerRoom);
+        int totalBits = ChromosomeLength();
         for (int i = 0; i < totalBits; i++) {
             genes.add(rand.nextInt(2));
         }
     }
 
+    @Override
     public int ChromosomeLength() {
         return numberOfCourses * (bitsPerSlot + bitsPerRoom);
     }
@@ -41,13 +42,13 @@ public class BinaryChromosome extends Chromosome<Integer> {
     @Override
     public Chromosome<Integer> createNew(List<Integer> genes) {
         BinaryChromosome newChromosome = new BinaryChromosome(numberOfCourses, maxSlot, maxRoom);
-        newChromosome.setGenes(genes);
+        newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }
 
     @Override
     public void calculateFitnessValue() {
-        Random rand = new Random();
-        this.setFitness(rand.nextDouble());
+        // Placeholder until domain-specific fitness is plugged in (e.g., timetable conflicts)
+        this.setFitness(new Random().nextDouble());
     }
 }

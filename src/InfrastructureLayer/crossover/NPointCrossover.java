@@ -4,100 +4,90 @@ import java.util.*;
 import DomainLayer.entities.Chromosome;
 import DomainLayer.interfaces.CrossoverStrategy;
 
-public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy {
+public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy<G, T> {
 
-    private List<T> matingPool;
-    private List<T> nextGeneration = new ArrayList<>();
-    private Random rand = new Random();
+    private final List<T> matingPool;
+    private final List<T> nextGeneration = new ArrayList<>();
+    private final Random rand = new Random();
 
     public NPointCrossover(List<T> matingPool) {
         this.matingPool = matingPool;
-        this.crossOver();
+        generateNextGeneration();
+    }
+
+    private void generateNextGeneration() {
+        int n = matingPool.size();
+        while (nextGeneration.size() < n) {
+            List<T> parents = selectParents();
+            List<T> children = crossOver(parents);
+            for (T child : children) {
+                if (nextGeneration.size() < n) nextGeneration.add(child);
+            }
+        }
+        nextGeneration.forEach(T::calculateFitnessValue);
     }
 
     @Override
-    public void crossOver() {
-        int n = matingPool.size();
+    public List<T> crossOver(List<T> parents) {
+        T p1 = parents.get(0);
+        T p2 = parents.get(1);
+        int length = p1.getGenes().size();
+        List<Integer> points = getCrossOverPoints(length);
 
-        while (nextGeneration.size() < n) {
-            List<T> parents = selectParents(matingPool);
-            T p1 = parents.get(0);
-            T p2 = parents.get(1);
+        List<G> child1Genes = new ArrayList<>();
+        List<G> child2Genes = new ArrayList<>();
+        boolean swap = false;
+        int last = 0;
 
-            List<Integer> crossOverPoints = getCrossOverPoints(p1.getGenes().size());
-
-            T offSpring1 = getOffspring(p1, p2, crossOverPoints);
-            T offSpring2 = getOffspring(p2, p1, crossOverPoints);
-
-            if (nextGeneration.size() == n - 1) {
-                double f1 = offSpring1.getFitness();
-                double f2 = offSpring2.getFitness();
-                if (f1 >= f2) {
-                    nextGeneration.add(offSpring1);
+        for (int point : points) {
+            for (int i = last; i < point; i++) {
+                if (swap) {
+                    child1Genes.add(p2.getGenes().get(i));
+                    child2Genes.add(p1.getGenes().get(i));
                 } else {
-                    nextGeneration.add(offSpring2);
+                    child1Genes.add(p1.getGenes().get(i));
+                    child2Genes.add(p2.getGenes().get(i));
                 }
+            }
+            swap = !swap;
+            last = point;
+        }
+        for (int i = last; i < length; i++) {
+            if (swap) {
+                child1Genes.add(p2.getGenes().get(i));
+                child2Genes.add(p1.getGenes().get(i));
             } else {
-                nextGeneration.add(offSpring1);
-                nextGeneration.add(offSpring2);
+                child1Genes.add(p1.getGenes().get(i));
+                child2Genes.add(p2.getGenes().get(i));
             }
         }
-        for (T c : nextGeneration)
-            c.calculateFitnessValue();
-    }
 
-    private List<T> selectParents(List<T> matingPool) {
-        List<T> parents = new ArrayList<>();
-        int n = matingPool.size();
-        int idx1 = rand.nextInt(n);
-        int idx2 = rand.nextInt(n);
-        while (idx2 == idx1)
-            idx2 = rand.nextInt(n);
-        parents.add(matingPool.get(idx1));
-        parents.add(matingPool.get(idx2));
-        return parents;
+        T child1 = (T) p1.createNew(child1Genes);
+        T child2 = (T) p2.createNew(child2Genes);
+        return Arrays.asList(child1, child2);
     }
 
     private List<Integer> getCrossOverPoints(int length) {
-        Set<Integer> points = new LinkedHashSet<>();
-        int N = 1 + rand.nextInt(Math.max(1, length / 2));
-        while (points.size() < N) {
-            int number = 1 + rand.nextInt(length - 2);
-            points.add(number);
+        int numPoints = 1 + rand.nextInt(Math.max(1, length / 2));
+        Set<Integer> points = new TreeSet<>();
+        while (points.size() < numPoints) {
+            points.add(1 + rand.nextInt(length - 2));
         }
-
-        List<Integer> sorted = new ArrayList<>(points);
-        Collections.sort(sorted);
-        return sorted;
+        return new ArrayList<>(points);
     }
 
-    private T getOffspring(T parent1, T parent2, List<Integer> points) {
-        List<G> offSpringGenes = new ArrayList<>();
-        int prev = 0;
-
-        for (int i = 0; i < points.size(); ++i) {
-            int next = points.get(i);
-            for (int j = prev; j <= next; ++j) {
-                if (i % 2 == 0)
-                    offSpringGenes.add(parent1.getGenes().get(j));
-                else
-                    offSpringGenes.add(parent2.getGenes().get(j));
-            }
-            prev = next + 1;
-        }
-
-        for (int j = prev; j < parent1.getGenes().size(); ++j) {
-            if (points.size() % 2 == 0)
-                offSpringGenes.add(parent1.getGenes().get(j));
-            else
-                offSpringGenes.add(parent2.getGenes().get(j));
-        }
-
-        return (T) parent1.createNew(offSpringGenes);
+    private List<T> selectParents() {
+        int n = matingPool.size();
+        T p1 = matingPool.get(rand.nextInt(n));
+        T p2;
+        do {
+            p2 = matingPool.get(rand.nextInt(n));
+        } while (p1 == p2);
+        return Arrays.asList(p1, p2);
     }
 
     @Override
     public List<T> getNextGeneration() {
-        return this.nextGeneration;
+        return nextGeneration;
     }
 }

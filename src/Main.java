@@ -1,8 +1,9 @@
 import ApplicationLayer.services.GeneticAlgorithm;
 import DomainLayer.entities.Population;
+import DomainLayer.interfaces.FitnessFunction;
 import InfrastructureLayer.chromosome.IntegerChromosome;
 import InfrastructureLayer.crossover.NPointCrossover;
-import InfrastructureLayer.fitness.FitnessFunction;
+import InfrastructureLayer.fitness.TimetableFitnessFunction;
 import InfrastructureLayer.mutation.Integer_Swap;
 import InfrastructureLayer.replacement.GenerationalReplacement;
 import InfrastructureLayer.selection.RouletteWheelSelection;
