@@ -9,14 +9,12 @@ public class GAConfig {
     private double crossoverRate;
     private double mutationRate;
     private int maxGenerations;
-    private boolean elitismEnabled;
 
-    public GAConfig(int populationSize, double crossoverRate, double mutationRate, int maxGenerations, boolean elitismEnabled) {
+    public GAConfig(int populationSize, double crossoverRate, double mutationRate, int maxGenerations) {
         this.populationSize = populationSize;
         this.crossoverRate = crossoverRate;
         this.mutationRate = mutationRate;
         this.maxGenerations = maxGenerations;
-        this.elitismEnabled = elitismEnabled;
     }
 
     public int getPopulationSize() {
@@ -35,7 +33,4 @@ public class GAConfig {
         return maxGenerations;
     }
 
-    public boolean isElitismEnabled() {
-        return elitismEnabled;
-    }
 }

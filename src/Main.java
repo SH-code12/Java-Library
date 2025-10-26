@@ -1,4 +1,5 @@
 import ApplicationLayer.services.GeneticAlgorithm;
+import DomainLayer.entities.GAConfig;
 import DomainLayer.entities.Population;
 import DomainLayer.interfaces.*;
 import InfrastructureLayer.crossover.NPointCrossover;
@@ -38,9 +39,14 @@ public class Main {
         System.out.print("Enter Number of Generations: ");
         int generations = input.nextInt();
 
+        //  Random Crossover Rate between 0.05 and 0.3
+        double crossoverRate = 0.05 + (0.25 * rand.nextDouble());
+        System.out.printf("Random Crossover Rate Selected: %.3f%n", crossoverRate);
+
         //  Random Mutation Rate between 0.05 and 0.3
         double mutationRate = 0.05 + (0.25 * rand.nextDouble());
         System.out.printf("Random Mutation Rate Selected: %.3f%n", mutationRate);
+
 
         // -----------------------------------------
         // Step 2: Choose Strategies
@@ -72,16 +78,36 @@ public class Main {
         // Step 3: Create Example Timetable Phenotype
         // -----------------------------------------
         List<Lecture> lectures = Arrays.asList(
-                new Lecture(0, "AI", "Dr. Hany", 2, 60, "AI101"),
-                new Lecture(1, "ML", "Dr. Reem", 2, 40, "ML102"),
-                new Lecture(2, "OS", "Dr. Tarek", 3, 80, "OS103"),
-                new Lecture(3, "DB", "Dr. Nada", 2, 70, "DB104")
+                new Lecture(0, "Artificial Intelligence", "Dr. Hany", 2, 60, "AI101"),
+                new Lecture(1, "Machine Learning", "Dr. Reem", 3, 70, "ML102"),
+                new Lecture(2, "Operating Systems", "Dr. Tarek", 3, 80, "OS103"),
+                new Lecture(3, "Database Systems", "Dr. Nada", 2, 75, "DB104"),
+                new Lecture(4, "Data Structures", "Dr. Salma", 2, 50, "DS105"),
+                new Lecture(5, "Computer Networks", "Dr. Omar", 3, 65, "CN106"),
+                new Lecture(6, "Software Engineering", "Dr. Heba", 2, 55, "SE107"),
+                new Lecture(7, "Cyber Security", "Dr. Ahmed", 3, 60, "CS108"),
+                new Lecture(8, "Cloud Computing", "Dr. Yara", 2, 45, "CC109"),
+                new Lecture(9, "Human Computer Interaction", "Dr. Laila", 2, 50, "HCI110")
         );
 
         List<Room> rooms = Arrays.asList(
-                new Room("Room A", 80, 6, 3),
-                new Room("Room B", 60, 6, 3)
+                new Room("Room A", 100, 6, 3),
+                new Room("Room B", 80, 6, 3),
+                new Room("Room C", 60, 6, 3),
+                new Room("Room D", 40, 6, 3)
         );
+
+//        List<Lecture> lectures = Arrays.asList(
+//                new Lecture(0, "AI", "Dr. Hany", 2, 60, "AI101"),
+//                new Lecture(1, "ML", "Dr. Reem", 2, 40, "ML102"),
+//                new Lecture(2, "OS", "Dr. Tarek", 3, 80, "OS103"),
+//                new Lecture(3, "DB", "Dr. Nada", 2, 70, "DB104")
+//        );
+//
+//        List<Room> rooms = Arrays.asList(
+//                new Room("Room A", 80, 6, 3),
+//                new Room("Room B", 60, 6, 3)
+//        );
 
         List<Integer> slots = Arrays.asList(8, 10, 12, 14, 16);
         TimeTablePhenoType phenotype = new TimeTablePhenoType(lectures, rooms, slots);
@@ -136,10 +162,19 @@ public class Main {
         // -----------------------------------------
         // Step 6: Initialize GA
         // -----------------------------------------
-        GeneticAlgorithm<Integer, TimetableChromosome> ga = new GeneticAlgorithm<>(
+        // -----------------------------------------
+// Step 6: Initialize GA Config (random rates handled inside)
+// -----------------------------------------
+        GAConfig config = new GAConfig(
                 populationSize,
-                generations,
-                mutationRate,
+                0,   // 0 → means random crossover rate
+                 0,   // 0 → means random mutation rate
+                generations
+        );
+
+// Initialize GA with GAConfig
+        GeneticAlgorithm<Integer, TimetableChromosome> ga = new GeneticAlgorithm<>(
+                config,
                 fitnessFn,
                 selectionStrategy,
                 crossoverStrategy,
@@ -147,6 +182,18 @@ public class Main {
                 replacementStrategy,
                 population
         );
+
+//        GeneticAlgorithm<Integer, TimetableChromosome> ga = new GeneticAlgorithm<>(
+//                populationSize,
+//                generations,
+//                mutationRate,
+//                fitnessFn,
+//                selectionStrategy,
+//                crossoverStrategy,
+//                mutationStrategy,
+//                replacementStrategy,
+//                population
+//        );
 
         // -----------------------------------------
         // Step 7: Run GA
