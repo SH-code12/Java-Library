@@ -84,7 +84,7 @@ public class GeneticAlgorithm<G, T extends Chromosome<G>> {
             evaluatePopulation();
         }
 
-        System.out.println("✅ Best fitness found: " + bestFitness);
+        System.out.println(" Best fitness found: " + bestFitness);
         return best;
     }
 
@@ -107,4 +107,9 @@ public class GeneticAlgorithm<G, T extends Chromosome<G>> {
             throw new IllegalStateException("Missing GA components. Ensure all strategies are set before running.");
         }
     }
+    // Return Best value
+    public double getHigherFitValue() {
+        return bestFitness;
+    }
+
 }

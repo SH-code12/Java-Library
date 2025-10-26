@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Random;
 import DomainLayer.entities.Chromosome;
 import DomainLayer.interfaces.SelectionStrategy;
+import PresentationLayer.timetable.TimetableChromosome;
 
 public class RouletteWheelSelection<T extends Chromosome<?>> implements SelectionStrategy<T> {
 
     private final Random rand = new Random();
+
+    public RouletteWheelSelection(List<TimetableChromosome> individuals) {
+    }
 
     @Override
     public List<T> select(List<T> population) {

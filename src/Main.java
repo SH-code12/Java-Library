@@ -1,79 +1,162 @@
 import ApplicationLayer.services.GeneticAlgorithm;
 import DomainLayer.entities.Population;
-import DomainLayer.interfaces.FitnessFunction;
-import InfrastructureLayer.chromosome.IntegerChromosome;
+import DomainLayer.interfaces.*;
 import InfrastructureLayer.crossover.NPointCrossover;
+import InfrastructureLayer.crossover.OnePointCrossover;
+import InfrastructureLayer.crossover.UniformCrossover;
 import InfrastructureLayer.fitness.TimetableFitnessFunction;
+import InfrastructureLayer.mutation.Integer_RandomReset;
 import InfrastructureLayer.mutation.Integer_Swap;
+import InfrastructureLayer.replacement.ElitismReplacement;
 import InfrastructureLayer.replacement.GenerationalReplacement;
+import InfrastructureLayer.replacement.SteadyStateReplacement;
 import InfrastructureLayer.selection.RouletteWheelSelection;
+import InfrastructureLayer.selection.TournamentSelection;
+import PresentationLayer.timetable.TimetableChromosome;
+import PresentationLayer.timetable.TimeTablePhenoType;
+import PresentationLayer.timetable.entity.Lecture;
+import PresentationLayer.timetable.entity.Room;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    private static final int population_size = 4;
-    private static final int generations = 5;
-    private static   final int  gene_length = 8;
-    private static final double mutation_rate = 0.2;
-    private  static final int  lowerBound =0;
-    private static final int upperBound = 9;
-
 
     public static void main(String[] args) {
 
-        FitnessFunction fitnessFunction = new FitnessFunction();
-        IntegerChromosome myChromosome = new IntegerChromosome(4,2,1);
-        IntegerChromosome myChromosome2 = new IntegerChromosome(4, 3, 1);
-        IntegerChromosome myChromosome3 = new IntegerChromosome(4, 3, 1);IntegerChromosome myChromosome4 = new IntegerChromosome(4, 3, 1);
-        IntegerChromosome myChromosome5 = new IntegerChromosome(4, 2, 1);
-        IntegerChromosome myChromosome6 = new IntegerChromosome(4, 2, 1);
-        IntegerChromosome myChromosome7 = new IntegerChromosome(4, 2, 1);
-      myChromosome.initializeGenes();myChromosome2.initializeGenes();myChromosome3.initializeGenes();myChromosome4.initializeGenes();
-        myChromosome5.initializeGenes();myChromosome6.initializeGenes();myChromosome7.initializeGenes();
-        List<IntegerChromosome> searchSpace = new ArrayList<>();
-        searchSpace.addAll(Arrays.asList(myChromosome, myChromosome2, myChromosome3
-                ,myChromosome4,myChromosome5,myChromosome6,myChromosome7
-        ));
+        Scanner input = new Scanner(System.in);
+        Random rand = new Random();
 
+        // -----------------------------------------
+        // Step 1: Get GA Configuration from User
+        // -----------------------------------------
+        System.out.println("=== Genetic Algorithm Configuration ===");
 
-        RouletteWheelSelection rouletteWheelSelection = new RouletteWheelSelection<>(searchSpace);
-        NPointCrossover nPointCrossover = new NPointCrossover<>(searchSpace);
-        Integer_Swap integerMutation = new Integer_Swap();
+        System.out.print("Enter Population Size: ");
+        int populationSize = input.nextInt();
 
-        GenerationalReplacement generationalReplacement = new
-                GenerationalReplacement();
+        System.out.print("Enter Number of Generations: ");
+        int generations = input.nextInt();
 
-        GeneticAlgorithm<Integer,IntegerChromosome> ga = new GeneticAlgorithm<>();
-        ga.setPopulationSz(population_size);
-        ga.setGenerationSz(generations);
-        ga.setMutationRate(mutation_rate);
-        ga.setPop(new Population<>(searchSpace));
+        //  Random Mutation Rate between 0.05 and 0.3
+        double mutationRate = 0.05 + (0.25 * rand.nextDouble());
+        System.out.printf("Random Mutation Rate Selected: %.3f%n", mutationRate);
 
-        ga.setFitnessFn(fitnessFunction);
-        ga.setSelectionStrategy(rouletteWheelSelection);
-        ga.setCrossoverStrategy(nPointCrossover);
+        // -----------------------------------------
+        // Step 2: Choose Strategies
+        // -----------------------------------------
+        System.out.println("\nChoose Selection Strategy:");
+        System.out.println("1. Roulette Wheel");
+        System.out.println("2. Tournament");
+        int selectionChoice = input.nextInt();
 
-        ga.setMutationStrategy(integerMutation);
-        ga.setReplacementStrategy(generationalReplacement);
+        System.out.println("\nChoose Crossover Strategy:");
+        System.out.println("1. One Point");
+        System.out.println("2. N-Point");
+        System.out.println("3. Uniform");
+        int crossoverChoice = input.nextInt();
 
-        try {
-            IntegerChromosome initialBest = ga.getBest();
-            System.out.println("\nInitial Best Solution (before run): " + initialBest);
+        System.out.println("\nChoose Mutation Strategy:");
+        System.out.println("1. Integer Swap");
+        System.out.println("2. Integer Random Reset");
+        int mutationChoice = input.nextInt();
 
-            IntegerChromosome finalBest = ga.run();
+        System.out.println("\nChoose Replacement Strategy:");
+        System.out.println("1. Generational Replacement");
+        System.out.println("2. Elitism Replacement");
+        System.out.println("3. SteadyState Replacement");
 
-            System.out.println("\n--- GA Run Complete After " + generations + " Generations ---");
-            System.out.println("Final Best Solution Found: " + finalBest);
-            System.out.println("Final Highest Fitness: " + String.format("%.2f", ga.getHigherFitValue()));
+        int replacementChoice = input.nextInt();
 
-        } catch (IllegalStateException e) {
-            System.err.println("Configuration Error: " + e.getMessage());
+        // -----------------------------------------
+        // Step 3: Create Example Timetable Phenotype
+        // -----------------------------------------
+        List<Lecture> lectures = Arrays.asList(
+                new Lecture(0, "AI", "Dr. Hany", 2, 60, "AI101"),
+                new Lecture(1, "ML", "Dr. Reem", 2, 40, "ML102"),
+                new Lecture(2, "OS", "Dr. Tarek", 3, 80, "OS103"),
+                new Lecture(3, "DB", "Dr. Nada", 2, 70, "DB104")
+        );
+
+        List<Room> rooms = Arrays.asList(
+                new Room("Room A", 80, 6, 3),
+                new Room("Room B", 60, 6, 3)
+        );
+
+        List<Integer> slots = Arrays.asList(8, 10, 12, 14, 16);
+        TimeTablePhenoType phenotype = new TimeTablePhenoType(lectures, rooms, slots);
+
+        // -----------------------------------------
+        // Step 4: Initialize Population
+        // -----------------------------------------
+        List<TimetableChromosome> individuals = new ArrayList<>();
+        for (int i = 0; i < populationSize; i++) {
+            TimetableChromosome chromosome = new TimetableChromosome(phenotype);
+            individuals.add(chromosome);
+        }
+        Population<TimetableChromosome> population = new Population<>(individuals);
+
+        // -----------------------------------------
+        // Step 5: Build GA Components Dynamically
+        // -----------------------------------------
+        FitnessFunction<TimetableChromosome> fitnessFn = new TimetableFitnessFunction<>();
+
+        // Selection
+        SelectionStrategy<TimetableChromosome> selectionStrategy;
+        switch (selectionChoice) {
+            case 2 -> selectionStrategy = new TournamentSelection<>(3);
+
+            default -> selectionStrategy = new RouletteWheelSelection<>(individuals);
+        }
+
+        // Crossover
+        CrossoverStrategy<Integer, TimetableChromosome> crossoverStrategy;
+        switch (crossoverChoice) {
+            case 2 -> crossoverStrategy = new NPointCrossover<>(individuals);
+            case 3 -> crossoverStrategy = new UniformCrossover<>(individuals);
+            default -> crossoverStrategy = new OnePointCrossover<>(individuals);
+        }
+
+        // Mutation
+        MutationStrategy<Integer> mutationStrategy;
+        switch (mutationChoice) {
+            case 2 -> mutationStrategy = new Integer_RandomReset();
+            default -> mutationStrategy = new Integer_Swap();
+        }
+
+        // Replacement
+        ReplacementStrategy<TimetableChromosome> replacementStrategy;
+        switch (replacementChoice) {
+            case 2 -> replacementStrategy = new ElitismReplacement<>(5); // keep top 5 parents, for example
+            case 3 -> replacementStrategy = new SteadyStateReplacement<>(5); // replace 5 weakest parents
+            default -> replacementStrategy = new GenerationalReplacement<>();
         }
 
 
+        // -----------------------------------------
+        // Step 6: Initialize GA
+        // -----------------------------------------
+        GeneticAlgorithm<Integer, TimetableChromosome> ga = new GeneticAlgorithm<>(
+                populationSize,
+                generations,
+                mutationRate,
+                fitnessFn,
+                selectionStrategy,
+                crossoverStrategy,
+                mutationStrategy,
+                replacementStrategy,
+                population
+        );
+
+        // -----------------------------------------
+        // Step 7: Run GA
+        // -----------------------------------------
+        System.out.println("\nRunning Genetic Algorithm...\n");
+
+        TimetableChromosome best = ga.run();
+
+        System.out.println("\n=== Final Best Timetable ===");
+        System.out.println(best);
+        System.out.println("Final Best Fitness: " + ga.getHigherFitValue());
     }
 }
