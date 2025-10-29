@@ -3,19 +3,19 @@ package DomainLayer.entities;
 import java.util.List;
 
 public abstract class Chromosome<T> {
-    protected List<T> genes;
+    protected List<Gene<T>> genes;
     protected double fitness;
 
-    public Chromosome(List<T> genes, double fitness) {
+    public Chromosome(List<Gene<T>> genes, double fitness) {
         this.genes = genes;
         this.fitness = fitness;
     }
 
-    public List<T> getGenes() {
+    public List<Gene<T>> getGenes() {
         return genes;
     }
 
-    public void setGenes(List<T> genes) {
+    public void setGenes(List<Gene<T>> genes) {
         this.genes = genes;
     }
 
@@ -27,14 +27,16 @@ public abstract class Chromosome<T> {
         this.fitness = fitness;
     }
 
-    // Abstract methods for flexibility
+    // Abstract methods
     public abstract void initializeGenes();
     public abstract int ChromosomeLength();
-    public abstract Chromosome<T> createNew(List<T> genes);
+    public abstract Chromosome<T> createNew(List<Gene<T>> genes);
     public abstract void calculateFitnessValue();
 
-    // Clone method for safe copying
     public Chromosome<T> cloneChromosome() {
-        return createNew(List.copyOf(genes));
+        List<Gene<T>> copiedGenes = genes.stream()
+                .map(Gene::copy)
+                .toList();
+        return createNew(copiedGenes);
     }
 }

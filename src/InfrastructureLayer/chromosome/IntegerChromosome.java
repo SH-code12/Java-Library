@@ -4,47 +4,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.Gene;
 
 public class IntegerChromosome extends Chromosome<Integer> {
 
-    private int numberOfCourses;
-    private int maxSlot;
-    private int maxRoom;
+    private int geneCount;
+    private int minValue;
+    private int maxValue;
 
-    public IntegerChromosome(int numberOfCourses, int maxSlot, int maxRoom) {
+    public IntegerChromosome(int geneCount, int minValue, int maxValue) {
         super(new ArrayList<>(), 0.0);
-        this.numberOfCourses = numberOfCourses;
-        this.maxSlot = maxSlot;
-        this.maxRoom = maxRoom;
+        this.geneCount = geneCount;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
         initializeGenes();
     }
 
     @Override
     public void initializeGenes() {
         Random rand = new Random();
-        for (int i = 0; i < numberOfCourses; i++) {
-            int slot = rand.nextInt(maxSlot) + 1;
-            int room = rand.nextInt(maxRoom) + 1;
-            genes.add(slot);
-            genes.add(room);
+        for (int i = 0; i < geneCount; i++) {
+            int value = rand.nextInt(maxValue - minValue + 1) + minValue;
+            genes.add(new Gene<>(value));
         }
     }
 
     @Override
     public int ChromosomeLength() {
-        return 2 * numberOfCourses;
+        return geneCount;
     }
 
     @Override
-    public Chromosome<Integer> createNew(List<Integer> genes) {
-        IntegerChromosome newChromosome = new IntegerChromosome(numberOfCourses, maxSlot, maxRoom);
+    public String toString() {
+        return "IntegerChromosome{" +
+                "genes=" + getGenes() +
+                '}';
+    }
+
+    @Override
+    public Chromosome<Integer> createNew(List<Gene<Integer>> genes) {
+        DomainLayer.entities.IntegerChromosome newChromosome = new DomainLayer.entities.IntegerChromosome(geneCount, minValue, maxValue);
         newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }
 
     @Override
     public void calculateFitnessValue() {
-        // Replace with domain-specific function (e.g., conflict count minimization)
+        // Replace with your problem’s real fitness function
         this.setFitness(new Random().nextDouble());
     }
 }

@@ -1,46 +1,42 @@
 package InfrastructureLayer.mutation;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.MutationStrategy;
 import InfrastructureLayer.chromosome.IntegerChromosome;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 public class Integer_RandomReset implements MutationStrategy<Integer> {
 
     private final Random rand = new Random();
 
-    // Helper wrapper to easily reuse existing structure
+    // Helper wrapper to reuse existing IntegerChromosome structure
     private static class IntegerChromosomeFromGenes extends IntegerChromosome {
-        public IntegerChromosomeFromGenes(List<Integer> genes) {
+        public IntegerChromosomeFromGenes(ArrayList<Gene<Integer>> genes) {
             super(1, 1, 1);
             setGenes(genes);
         }
     }
 
-    // --- Bit-wise (Random Reset) Mutation Method ---
+    // --- Random Reset Mutation Method ---
     @Override
     public Chromosome<Integer> mutate(Chromosome<Integer> chromosome, double mutationRate) {
-        List<Integer> genes = new ArrayList<>(chromosome.getGenes());
-        List<Integer> mutatedGenes = new ArrayList<>();
+        // Clone and mutate genes safely
+        ArrayList<Gene<Integer>> mutatedGenes = new ArrayList<>();
 
-        for (int value : genes) {
+        for (Gene<Integer> gene : chromosome.getGenes()) {
+            Gene<Integer> newGene = gene.copy();
+
             if (rand.nextDouble() < mutationRate) {
-                // Flip bit-like — random new integer (for timetable range 1–max)
-                int newValue = rand.nextInt(10) + 1;
-                mutatedGenes.add(newValue);
-            } else {
-                mutatedGenes.add(value);
+                // Assign a new random integer value (for example, 1–10 range)
+                newGene.setValue(rand.nextInt(10) + 1);
             }
+
+            mutatedGenes.add(newGene);
         }
 
         return new IntegerChromosomeFromGenes(mutatedGenes);
     }
-
-
 }
-
-

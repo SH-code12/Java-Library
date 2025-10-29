@@ -1,8 +1,9 @@
 package PresentationLayer.timetable;
 
 import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.Gene;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TimetableChromosome extends Chromosome<Integer> {
@@ -15,7 +16,7 @@ public class TimetableChromosome extends Chromosome<Integer> {
     initializeGenes();
   }
 
-  public TimetableChromosome(TimeTablePhenoType context, List<Integer> genes) {
+  public TimetableChromosome(TimeTablePhenoType context, List<Gene<Integer>> genes) {
     super(genes, 0.0);
     this.context = context;
   }
@@ -29,11 +30,13 @@ public class TimetableChromosome extends Chromosome<Integer> {
     genes.clear();
     int totalSlots = context.numOfRooms * context.numOfSlots;
     int totalLectures = context.getLectures().size();
+
     for (int i = 0; i < totalSlots; i++) {
-      // Randomly assign lecture IDs or -1 (empty slot)
-      genes.add(i < totalLectures ? i : -1);
+      int value = (i < totalLectures) ? i : -1;
+      genes.add(new Gene<>(value));
     }
-    java.util.Collections.shuffle(genes);
+
+    Collections.shuffle(genes);
   }
 
   @Override
@@ -42,7 +45,7 @@ public class TimetableChromosome extends Chromosome<Integer> {
   }
 
   @Override
-  public Chromosome<Integer> createNew(List<Integer> genes) {
+  public Chromosome<Integer> createNew(List<Gene<Integer>> genes) {
     return new TimetableChromosome(context, genes);
   }
 
@@ -54,7 +57,7 @@ public class TimetableChromosome extends Chromosome<Integer> {
 
     for (int roomIdx = 0; roomIdx < context.numOfRooms; roomIdx++) {
       for (int slotIdx = 0; slotIdx < context.numOfSlots; slotIdx++) {
-        int lectureId = genes.get(index++);
+        int lectureId = genes.get(index++).getValue();
         if (lectureId == -1) continue;
 
         var lecture = context.getLecture(lectureId);
@@ -87,10 +90,11 @@ public class TimetableChromosome extends Chromosome<Integer> {
   public String toString() {
     StringBuilder sb = new StringBuilder("Timetable:\n");
     int index = 0;
+
     for (int r = 0; r < context.numOfRooms; r++) {
       sb.append(context.getRoom(r).name).append(": ");
       for (int s = 0; s < context.numOfSlots; s++) {
-        int lectureId = genes.get(index++);
+        int lectureId = genes.get(index++).getValue();
         sb.append(lectureId == -1 ? "---" : context.getLecture(lectureId).getName()).append(" | ");
       }
       sb.append("\n");

@@ -159,12 +159,8 @@ public class Main {
         }
 
 
+        // Step 6: Initialize GA Config (random rates handled inside)
         // -----------------------------------------
-        // Step 6: Initialize GA
-        // -----------------------------------------
-        // -----------------------------------------
-// Step 6: Initialize GA Config (random rates handled inside)
-// -----------------------------------------
         GAConfig config = new GAConfig(
                 populationSize,
                 0,   // 0 → means random crossover rate
@@ -172,7 +168,7 @@ public class Main {
                 generations
         );
 
-// Initialize GA with GAConfig
+        // Initialize GA with GAConfig
         GeneticAlgorithm<Integer, TimetableChromosome> ga = new GeneticAlgorithm<>(
                 config,
                 fitnessFn,
@@ -183,17 +179,6 @@ public class Main {
                 population
         );
 
-//        GeneticAlgorithm<Integer, TimetableChromosome> ga = new GeneticAlgorithm<>(
-//                populationSize,
-//                generations,
-//                mutationRate,
-//                fitnessFn,
-//                selectionStrategy,
-//                crossoverStrategy,
-//                mutationStrategy,
-//                replacementStrategy,
-//                population
-//        );
 
         // -----------------------------------------
         // Step 7: Run GA

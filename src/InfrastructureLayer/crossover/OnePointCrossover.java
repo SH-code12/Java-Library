@@ -1,9 +1,14 @@
 package InfrastructureLayer.crossover;
 
-import java.util.*;
 import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.CrossoverStrategy;
 
+import java.util.*;
+
+/**
+ * One-Point Crossover implementation using Gene<T>.
+ */
 public class OnePointCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy<G, T> {
 
     private final List<T> matingPool;
@@ -32,10 +37,10 @@ public class OnePointCrossover<G, T extends Chromosome<G>> implements CrossoverS
         T p1 = parents.get(0);
         T p2 = parents.get(1);
         int length = p1.getGenes().size();
-        int crossPoint = 1 + rand.nextInt(length - 2);
+        int crossPoint = 1 + rand.nextInt(Math.max(1, length - 2));
 
-        List<G> child1Genes = new ArrayList<>();
-        List<G> child2Genes = new ArrayList<>();
+        List<Gene<G>> child1Genes = new ArrayList<>();
+        List<Gene<G>> child2Genes = new ArrayList<>();
 
         for (int i = 0; i < length; i++) {
             if (i < crossPoint) {
@@ -47,7 +52,9 @@ public class OnePointCrossover<G, T extends Chromosome<G>> implements CrossoverS
             }
         }
 
+        @SuppressWarnings("unchecked")
         T child1 = (T) p1.createNew(child1Genes);
+        @SuppressWarnings("unchecked")
         T child2 = (T) p2.createNew(child2Genes);
         return Arrays.asList(child1, child2);
     }
@@ -62,7 +69,6 @@ public class OnePointCrossover<G, T extends Chromosome<G>> implements CrossoverS
         return Arrays.asList(p1, p2);
     }
 
-    @Override
     public List<T> getNextGeneration() {
         return nextGeneration;
     }

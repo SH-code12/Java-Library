@@ -1,9 +1,14 @@
 package InfrastructureLayer.crossover;
 
-import java.util.*;
 import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.CrossoverStrategy;
 
+import java.util.*;
+
+/**
+ * Uniform Crossover implementation using Gene<T>.
+ */
 public class UniformCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy<G, T> {
 
     private final List<T> matingPool;
@@ -32,8 +37,9 @@ public class UniformCrossover<G, T extends Chromosome<G>> implements CrossoverSt
         T p1 = parents.get(0);
         T p2 = parents.get(1);
         int length = p1.getGenes().size();
-        List<G> child1Genes = new ArrayList<>();
-        List<G> child2Genes = new ArrayList<>();
+
+        List<Gene<G>> child1Genes = new ArrayList<>();
+        List<Gene<G>> child2Genes = new ArrayList<>();
 
         for (int i = 0; i < length; i++) {
             if (rand.nextBoolean()) {
@@ -45,7 +51,9 @@ public class UniformCrossover<G, T extends Chromosome<G>> implements CrossoverSt
             }
         }
 
+        @SuppressWarnings("unchecked")
         T child1 = (T) p1.createNew(child1Genes);
+        @SuppressWarnings("unchecked")
         T child2 = (T) p2.createNew(child2Genes);
         return Arrays.asList(child1, child2);
     }
@@ -60,7 +68,6 @@ public class UniformCrossover<G, T extends Chromosome<G>> implements CrossoverSt
         return Arrays.asList(p1, p2);
     }
 
-    @Override
     public List<T> getNextGeneration() {
         return nextGeneration;
     }

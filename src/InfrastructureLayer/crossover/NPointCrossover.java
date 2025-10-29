@@ -1,9 +1,14 @@
 package InfrastructureLayer.crossover;
 
-import java.util.*;
 import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.CrossoverStrategy;
 
+import java.util.*;
+
+/**
+ * N-Point Crossover implementation using Gene<T>.
+ */
 public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy<G, T> {
 
     private final List<T> matingPool;
@@ -34,8 +39,9 @@ public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStr
         int length = p1.getGenes().size();
         List<Integer> points = getCrossOverPoints(length);
 
-        List<G> child1Genes = new ArrayList<>();
-        List<G> child2Genes = new ArrayList<>();
+        List<Gene<G>> child1Genes = new ArrayList<>();
+        List<Gene<G>> child2Genes = new ArrayList<>();
+
         boolean swap = false;
         int last = 0;
 
@@ -52,6 +58,7 @@ public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStr
             swap = !swap;
             last = point;
         }
+
         for (int i = last; i < length; i++) {
             if (swap) {
                 child1Genes.add(p2.getGenes().get(i));
@@ -62,7 +69,9 @@ public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStr
             }
         }
 
+        @SuppressWarnings("unchecked")
         T child1 = (T) p1.createNew(child1Genes);
+        @SuppressWarnings("unchecked")
         T child2 = (T) p2.createNew(child2Genes);
         return Arrays.asList(child1, child2);
     }
@@ -71,7 +80,7 @@ public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStr
         int numPoints = 1 + rand.nextInt(Math.max(1, length / 2));
         Set<Integer> points = new TreeSet<>();
         while (points.size() < numPoints) {
-            points.add(1 + rand.nextInt(length - 2));
+            points.add(1 + rand.nextInt(Math.max(1, length - 2)));
         }
         return new ArrayList<>(points);
     }
@@ -86,7 +95,6 @@ public class NPointCrossover<G, T extends Chromosome<G>> implements CrossoverStr
         return Arrays.asList(p1, p2);
     }
 
-    @Override
     public List<T> getNextGeneration() {
         return nextGeneration;
     }

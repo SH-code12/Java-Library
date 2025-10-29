@@ -1,20 +1,20 @@
 package InfrastructureLayer.mutation;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.interfaces.MutationStrategy;
-import InfrastructureLayer.chromosome.FloatingChromosome;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-public class Floating_Uniform  implements MutationStrategy<Double>  {
+import DomainLayer.entities.Chromosome;
+import InfrastructureLayer.chromosome.FloatingChromosome;
+import DomainLayer.entities.Gene;
+import DomainLayer.interfaces.MutationStrategy;
 
+public class Floating_Uniform implements MutationStrategy<Double> {
 
     private final Random rand = new Random();
 
+    // Helper wrapper to reuse existing FloatingChromosome structure
     private static class FloatingChromosomeFromGenes extends FloatingChromosome {
-        public FloatingChromosomeFromGenes(List<Double> genes) {
+        public FloatingChromosomeFromGenes(ArrayList<Gene<Double>> genes) {
             super(1, 1, 1);
             setGenes(genes);
         }
@@ -23,22 +23,20 @@ public class Floating_Uniform  implements MutationStrategy<Double>  {
     // --- Uniform Mutation ---
     @Override
     public Chromosome<Double> mutate(Chromosome<Double> chromosome, double mutationRate) {
-        List<Double> genes = new ArrayList<>(chromosome.getGenes());
-        List<Double> mutatedGenes = new ArrayList<>();
+        ArrayList<Gene<Double>> mutatedGenes = new ArrayList<>();
 
-        for (double value : genes) {
+        for (Gene<Double> gene : chromosome.getGenes()) {
+            Gene<Double> newGene = gene.copy();
+
             if (rand.nextDouble() < mutationRate) {
-                double delta = (rand.nextDouble() * 2 - 1); // [-1, +1]
-                mutatedGenes.add(value + delta);
-            } else {
-                mutatedGenes.add(value);
+                // Apply uniform mutation: add random delta between [-1, +1]
+                double delta = (rand.nextDouble() * 2 - 1);
+                newGene.setValue(newGene.getValue() + delta);
             }
+
+            mutatedGenes.add(newGene);
         }
 
         return new FloatingChromosomeFromGenes(mutatedGenes);
     }
-
-
 }
-
-
