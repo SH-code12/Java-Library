@@ -37,7 +37,7 @@ public class FloatingChromosome extends Chromosome<Double> {
 
     @Override
     public Chromosome<Double> createNew(List<Gene<Double>> genes) {
-        DomainLayer.entities.FloatingChromosome newChromosome = new DomainLayer.entities.FloatingChromosome(geneCount, minValue, maxValue);
+        FloatingChromosome newChromosome = new FloatingChromosome(geneCount, minValue, maxValue);
         newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }

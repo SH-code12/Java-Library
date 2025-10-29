@@ -33,7 +33,7 @@ public class BinaryChromosome extends Chromosome<Integer> {
 
     @Override
     public Chromosome<Integer> createNew(List<Gene<Integer>> genes) {
-        DomainLayer.entities.BinaryChromosome newChromosome = new DomainLayer.entities.BinaryChromosome(geneCount);
+        BinaryChromosome newChromosome = new BinaryChromosome(geneCount);
         newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }

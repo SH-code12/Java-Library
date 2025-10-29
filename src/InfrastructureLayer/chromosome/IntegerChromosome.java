@@ -43,7 +43,7 @@ public class IntegerChromosome extends Chromosome<Integer> {
 
     @Override
     public Chromosome<Integer> createNew(List<Gene<Integer>> genes) {
-        DomainLayer.entities.IntegerChromosome newChromosome = new DomainLayer.entities.IntegerChromosome(geneCount, minValue, maxValue);
+        IntegerChromosome newChromosome = new IntegerChromosome(geneCount, minValue, maxValue);
         newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }
