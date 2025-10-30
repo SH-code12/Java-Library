@@ -3,62 +3,48 @@ package InfrastructureLayer.selection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import DomainLayer.entities.Chromosome;
 import DomainLayer.interfaces.SelectionStrategy;
+import PresentationLayer.timetable.TimetableChromosome;
 
-public class RouletteWheelSelection<T extends Chromosome<?>>implements SelectionStrategy {
+public class RouletteWheelSelection<T extends Chromosome<?>> implements SelectionStrategy<T> {
 
-    private List<T> searchSpace;
-    private List<T> matingPool = new ArrayList<>();
+    private final Random rand = new Random();
 
-    public RouletteWheelSelection(List<T> searchSpace) {
-        this.searchSpace = searchSpace;
-        this.select();
+    public RouletteWheelSelection(List<TimetableChromosome> individuals) {
     }
 
-    private List<Double> calculateCumulativeRange(List<T> ss) {
-        List<Double> range = new ArrayList<>();
-        double totalFitness = 0.0;
-        for (T chr : ss)
-            totalFitness += chr.getFitness();
+    @Override
+    public List<T> select(List<T> population) {
+        List<T> matingPool = new ArrayList<>();
+        double totalFitness = population.stream().mapToDouble(T::getFitness).sum();
 
-        double cumulative = 0.0;
-        for (T chr : ss) {
-            cumulative += chr.getFitness() / totalFitness;
-            range.add(cumulative);
+        if (totalFitness == 0) {
+            // Avoid division by zero
+            return new ArrayList<>(population);
+        }
+
+        // Compute cumulative probabilities
+        List<Double> cumulative = new ArrayList<>();
+        double sum = 0.0;
+        for (T chr : population) {
+            sum += chr.getFitness() / totalFitness;
+            cumulative.add(sum);
         }
 
         // Ensure the last value is exactly 1.0
-        range.set(range.size() - 1, 1.0);
-        return range;
-    }
+        cumulative.set(cumulative.size() - 1, 1.0);
 
-    private List<Double> generateRandoms(int n) {
-        Random r = new Random();
-        List<Double> randoms = new ArrayList<>();
-        for (int i = 0; i < n; i++)
-            randoms.add(r.nextDouble());
-        return randoms;
-    }
-
-    public List<T> select() {
-        int n = searchSpace.size();
-        List<Double> cumulativeRange = calculateCumulativeRange(searchSpace);
-        List<Double> randoms = generateRandoms(n);
-
-        for (double rand : randoms) {
-            for (int j = 0; j < cumulativeRange.size(); j++) {
-                if (rand <= cumulativeRange.get(j)) {
-                    matingPool.add(searchSpace.get(j));
+        // Perform selection
+        for (int i = 0; i < population.size(); i++) {
+            double r = rand.nextDouble();
+            for (int j = 0; j < cumulative.size(); j++) {
+                if (r <= cumulative.get(j)) {
+                    matingPool.add(population.get(j));
                     break;
                 }
             }
         }
-        return matingPool;
-    }
-
-    public List<T> getMatingPool() {
         return matingPool;
     }
 }

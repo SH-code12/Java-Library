@@ -5,7 +5,7 @@ import DomainLayer.entities.Chromosome;
 
 public interface CrossoverStrategy<G, T extends Chromosome<G>> {
 
-    void crossOver();
-
+    List<T> crossOver(List<T> parents);
     List<T> getNextGeneration();
+
 }

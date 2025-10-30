@@ -1,10 +1,9 @@
 package DomainLayer.interfaces;
 
+import java.util.List;
 import DomainLayer.entities.Chromosome;
 
-import java.util.List;
-
-public interface SelectionStrategy <T extends Chromosome<?>> {
-    public List<T> select();
+public interface SelectionStrategy<T extends Chromosome<?>> {
+    List<T> select(List<T> population);
 
 }

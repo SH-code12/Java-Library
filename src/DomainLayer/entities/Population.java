@@ -12,6 +12,9 @@ public class Population <T extends Chromosome> implements Iterable<T>{
     public Population() {
         this.chromosomes = new ArrayList<>();
     }
+    public Population(List<T> chromosomes) {
+        this.chromosomes = chromosomes;
+    }
 
     public List<T> getChromosomes() {
         return chromosomes;
@@ -20,13 +23,13 @@ public class Population <T extends Chromosome> implements Iterable<T>{
     public void setChromosomes(List<T> chromosomes) {
         this.chromosomes = chromosomes;
     }
-
-
-
-    public Population(List<T> chromosomes) {
-        this.chromosomes = chromosomes;
+    public void addChromosome(T chromosome) {
+        this.chromosomes.add(chromosome);
     }
 
+    public int size() {
+        return chromosomes.size();
+    }
 
     @Override
     public Iterator<T> iterator() {
