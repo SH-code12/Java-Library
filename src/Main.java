@@ -13,9 +13,19 @@ public class Main {
         System.out.println("2. Fuzzy Logic");
         int choice = input.nextInt();
 
-        if (choice == 1) GAController.main(null);
-        else if (choice == 2) FuzzyController.main(null);
-        else System.out.println("Invalid choice.");
+        switch (choice){
+            case 1:
+                GAController.main(null);
+                break;
+            case 2:
+                FuzzyController.main(null);
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                break;
+
+
+        }
     }
 }
 
