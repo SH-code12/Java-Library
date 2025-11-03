@@ -1,4 +1,4 @@
-package InfrastructureLayer.crossover;
+package InfrastructureLayer.GA.crossover;
 
 import DomainLayer.entities.Chromosome;
 import DomainLayer.entities.Gene;

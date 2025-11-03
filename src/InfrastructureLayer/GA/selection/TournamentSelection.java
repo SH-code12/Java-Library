@@ -1,4 +1,4 @@
-package InfrastructureLayer.selection;
+package InfrastructureLayer.GA.selection;
 
 import java.util.ArrayList;
 import java.util.List;

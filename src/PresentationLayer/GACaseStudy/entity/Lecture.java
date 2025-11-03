@@ -1,4 +1,4 @@
-package PresentationLayer.timetable.entity;
+package PresentationLayer.GACaseStudy.entity;
 
 import java.util.Arrays;
 import java.util.List;

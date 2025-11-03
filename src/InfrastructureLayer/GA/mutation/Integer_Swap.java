@@ -1,11 +1,11 @@
-package InfrastructureLayer.mutation;
+package InfrastructureLayer.GA.mutation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
-import InfrastructureLayer.chromosome.IntegerChromosome;
+import InfrastructureLayer.GA.chromosome.IntegerChromosome;
 import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.MutationStrategy;
 

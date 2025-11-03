@@ -1,18 +1,19 @@
-package InfrastructureLayer.chromosome;
+package InfrastructureLayer.GA.chromosome;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import DomainLayer.entities.Chromosome;
 import DomainLayer.entities.Gene;
 
-public class IntegerChromosome extends Chromosome<Integer> {
+public class FloatingChromosome extends Chromosome<Double> {
 
     private int geneCount;
-    private int minValue;
-    private int maxValue;
+    private double minValue;
+    private double maxValue;
 
-    public IntegerChromosome(int geneCount, int minValue, int maxValue) {
+    public FloatingChromosome(int geneCount, double minValue, double maxValue) {
         super(new ArrayList<>(), 0.0);
         this.geneCount = geneCount;
         this.minValue = minValue;
@@ -24,7 +25,7 @@ public class IntegerChromosome extends Chromosome<Integer> {
     public void initializeGenes() {
         Random rand = new Random();
         for (int i = 0; i < geneCount; i++) {
-            int value = rand.nextInt(maxValue - minValue + 1) + minValue;
+            double value = minValue + rand.nextDouble() * (maxValue - minValue);
             genes.add(new Gene<>(value));
         }
     }
@@ -35,22 +36,17 @@ public class IntegerChromosome extends Chromosome<Integer> {
     }
 
     @Override
-    public String toString() {
-        return "IntegerChromosome{" +
-                "genes=" + getGenes() +
-                '}';
-    }
-
-    @Override
-    public Chromosome<Integer> createNew(List<Gene<Integer>> genes) {
-        IntegerChromosome newChromosome = new IntegerChromosome(geneCount, minValue, maxValue);
+    public Chromosome<Double> createNew(List<Gene<Double>> genes) {
+        FloatingChromosome newChromosome = new FloatingChromosome(geneCount, minValue, maxValue);
         newChromosome.setGenes(new ArrayList<>(genes));
         return newChromosome;
     }
 
     @Override
     public void calculateFitnessValue() {
-        // Replace with your problem’s real fitness function
+        // Replace with your domain-specific fitness function
         this.setFitness(new Random().nextDouble());
     }
 }
+
+

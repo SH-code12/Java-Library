@@ -1,4 +1,4 @@
-package InfrastructureLayer.crossover;
+package InfrastructureLayer.GA.crossover;
 
 import DomainLayer.entities.Chromosome;
 import DomainLayer.entities.Gene;
@@ -7,15 +7,15 @@ import DomainLayer.interfaces.CrossoverStrategy;
 import java.util.*;
 
 /**
- * One-Point Crossover implementation using Gene<T>.
+ * Uniform Crossover implementation using Gene<T>.
  */
-public class OnePointCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy<G, T> {
+public class UniformCrossover<G, T extends Chromosome<G>> implements CrossoverStrategy<G, T> {
 
     private final List<T> matingPool;
     private final List<T> nextGeneration = new ArrayList<>();
     private final Random rand = new Random();
 
-    public OnePointCrossover(List<T> matingPool) {
+    public UniformCrossover(List<T> matingPool) {
         this.matingPool = matingPool;
         generateNextGeneration();
     }
@@ -37,13 +37,12 @@ public class OnePointCrossover<G, T extends Chromosome<G>> implements CrossoverS
         T p1 = parents.get(0);
         T p2 = parents.get(1);
         int length = p1.getGenes().size();
-        int crossPoint = 1 + rand.nextInt(Math.max(1, length - 2));
 
         List<Gene<G>> child1Genes = new ArrayList<>();
         List<Gene<G>> child2Genes = new ArrayList<>();
 
         for (int i = 0; i < length; i++) {
-            if (i < crossPoint) {
+            if (rand.nextBoolean()) {
                 child1Genes.add(p1.getGenes().get(i));
                 child2Genes.add(p2.getGenes().get(i));
             } else {

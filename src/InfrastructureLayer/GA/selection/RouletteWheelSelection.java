@@ -1,11 +1,11 @@
-package InfrastructureLayer.selection;
+package InfrastructureLayer.GA.selection;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import DomainLayer.entities.Chromosome;
 import DomainLayer.interfaces.SelectionStrategy;
-import PresentationLayer.timetable.TimetableChromosome;
+import PresentationLayer.GACaseStudy.TimetableChromosome;
 
 public class RouletteWheelSelection<T extends Chromosome<?>> implements SelectionStrategy<T> {
 

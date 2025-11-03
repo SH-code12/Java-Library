@@ -1,9 +1,9 @@
-package InfrastructureLayer.mutation;
+package InfrastructureLayer.GA.mutation;
 
 import DomainLayer.entities.Chromosome;
 import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.MutationStrategy;
-import InfrastructureLayer.chromosome.BinaryChromosome;
+import InfrastructureLayer.GA.chromosome.BinaryChromosome;
 
 import java.util.ArrayList;
 import java.util.List;

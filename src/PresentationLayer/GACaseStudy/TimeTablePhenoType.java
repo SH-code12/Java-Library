@@ -1,7 +1,7 @@
-package PresentationLayer.timetable;
+package PresentationLayer.GACaseStudy;
 
-import PresentationLayer.timetable.entity.Lecture;
-import PresentationLayer.timetable.entity.Room;
+import PresentationLayer.GACaseStudy.entity.Lecture;
+import PresentationLayer.GACaseStudy.entity.Room;
 
 import java.util.List;
 

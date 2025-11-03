@@ -1,10 +1,10 @@
-package InfrastructureLayer.mutation;
+package InfrastructureLayer.GA.mutation;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import DomainLayer.entities.Chromosome;
-import InfrastructureLayer.chromosome.FloatingChromosome;
+import InfrastructureLayer.GA.chromosome.FloatingChromosome;
 import DomainLayer.entities.Gene;
 import DomainLayer.interfaces.MutationStrategy;
 

@@ -1,4 +1,4 @@
-package InfrastructureLayer.chromosome;
+package InfrastructureLayer.GA.chromosome;
 
 import java.util.ArrayList;
 import java.util.List;

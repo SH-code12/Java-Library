@@ -1,4 +1,4 @@
-package PresentationLayer.timetable.entity;
+package PresentationLayer.GACaseStudy.entity;
 
 public class Room {
     public final String name;

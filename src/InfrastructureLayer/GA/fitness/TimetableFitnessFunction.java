@@ -1,4 +1,4 @@
-package InfrastructureLayer.fitness;
+package InfrastructureLayer.GA.fitness;
 
 import DomainLayer.entities.Chromosome;
 import DomainLayer.interfaces.FitnessFunction;

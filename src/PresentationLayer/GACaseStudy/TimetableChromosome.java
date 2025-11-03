@@ -1,7 +1,8 @@
-package PresentationLayer.timetable;
+package PresentationLayer.GACaseStudy;
 
 import DomainLayer.entities.Chromosome;
 import DomainLayer.entities.Gene;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
