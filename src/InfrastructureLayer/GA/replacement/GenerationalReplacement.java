@@ -1,8 +1,8 @@
 package InfrastructureLayer.GA.replacement;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.Population;
-import DomainLayer.interfaces.ReplacementStrategy;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.Population;
+import DomainLayer.interfaces.GA.ReplacementStrategy;
 
 import java.util.List;
 

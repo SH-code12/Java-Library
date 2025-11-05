@@ -1,4 +1,4 @@
-package DomainLayer.entities;
+package DomainLayer.entities.GA;
 
 /**
  * Holds all configuration parameters for the Genetic Algorithm.

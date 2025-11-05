@@ -1,7 +1,7 @@
-package DomainLayer.interfaces;
+package DomainLayer.interfaces.GA;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.Population;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.Population;
 
 import java.util.List;
 

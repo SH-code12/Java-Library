@@ -1,7 +1,7 @@
-package PresentationLayer.GACaseStudy;
+package PresentationLayer.GACaseStudy.Schedule;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.Gene;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.Gene;
 
 import java.util.ArrayList;
 import java.util.Collections;

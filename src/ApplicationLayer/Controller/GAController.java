@@ -1,9 +1,9 @@
 package ApplicationLayer.Controller;
 
 import ApplicationLayer.services.GeneticAlgorithm;
-import DomainLayer.entities.GAConfig;
-import DomainLayer.entities.Population;
-import DomainLayer.interfaces.*;
+import DomainLayer.entities.GA.GAConfig;
+import DomainLayer.entities.GA.Population;
+import DomainLayer.interfaces.GA.*;
 import InfrastructureLayer.GA.crossover.NPointCrossover;
 import InfrastructureLayer.GA.crossover.OnePointCrossover;
 import InfrastructureLayer.GA.crossover.UniformCrossover;
@@ -15,8 +15,8 @@ import InfrastructureLayer.GA.replacement.GenerationalReplacement;
 import InfrastructureLayer.GA.replacement.SteadyStateReplacement;
 import InfrastructureLayer.GA.selection.RouletteWheelSelection;
 import InfrastructureLayer.GA.selection.TournamentSelection;
-import PresentationLayer.GACaseStudy.TimeTablePhenoType;
-import PresentationLayer.GACaseStudy.TimetableChromosome;
+import PresentationLayer.GACaseStudy.Schedule.TimeTablePhenoType;
+import PresentationLayer.GACaseStudy.Schedule.TimetableChromosome;
 import PresentationLayer.GACaseStudy.entity.Lecture;
 import PresentationLayer.GACaseStudy.entity.Room;
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.interfaces.SelectionStrategy;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.interfaces.GA.SelectionStrategy;
 
 public class TournamentSelection<T extends Chromosome<?>> implements SelectionStrategy<T> {
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.Gene;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.Gene;
 
 public class BinaryChromosome extends Chromosome<Integer> {
 

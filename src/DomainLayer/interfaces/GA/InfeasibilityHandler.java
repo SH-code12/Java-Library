@@ -1,6 +1,6 @@
-package DomainLayer.interfaces;
+package DomainLayer.interfaces.GA;
 
-import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.GA.Chromosome;
 
 /**
  * Defines how to handle infeasible chromosomes (e.g., constraint violations).

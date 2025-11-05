@@ -1,8 +1,8 @@
 package InfrastructureLayer.GA.crossover;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.Gene;
-import DomainLayer.interfaces.CrossoverStrategy;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.Gene;
+import DomainLayer.interfaces.GA.CrossoverStrategy;
 
 import java.util.*;
 

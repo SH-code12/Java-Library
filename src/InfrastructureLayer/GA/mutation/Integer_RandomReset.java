@@ -3,9 +3,9 @@ package InfrastructureLayer.GA.mutation;
 import java.util.ArrayList;
 import java.util.Random;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.Gene;
-import DomainLayer.interfaces.MutationStrategy;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.Gene;
+import DomainLayer.interfaces.GA.MutationStrategy;
 import InfrastructureLayer.GA.chromosome.IntegerChromosome;
 
 public class Integer_RandomReset implements MutationStrategy<Integer> {

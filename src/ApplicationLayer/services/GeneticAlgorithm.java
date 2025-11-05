@@ -1,9 +1,9 @@
 package ApplicationLayer.services;
 
-import DomainLayer.entities.Chromosome;
-import DomainLayer.entities.GAConfig;
-import DomainLayer.entities.Population;
-import DomainLayer.interfaces.*;
+import DomainLayer.entities.GA.Chromosome;
+import DomainLayer.entities.GA.GAConfig;
+import DomainLayer.entities.GA.Population;
+import DomainLayer.interfaces.GA.*;
 
 import java.util.ArrayList;
 import java.util.List;

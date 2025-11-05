@@ -1,4 +1,4 @@
-package DomainLayer.entities;
+package DomainLayer.entities.GA;
 
 import java.util.List;
 

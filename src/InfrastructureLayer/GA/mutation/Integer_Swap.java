@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.GA.Chromosome;
 import InfrastructureLayer.GA.chromosome.IntegerChromosome;
-import DomainLayer.entities.Gene;
-import DomainLayer.interfaces.MutationStrategy;
+import DomainLayer.entities.GA.Gene;
+import DomainLayer.interfaces.GA.MutationStrategy;
 
 public class Integer_Swap implements MutationStrategy<Integer> {
 

@@ -3,10 +3,10 @@ package InfrastructureLayer.GA.mutation;
 import java.util.ArrayList;
 import java.util.Random;
 
-import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.GA.Chromosome;
 import InfrastructureLayer.GA.chromosome.FloatingChromosome;
-import DomainLayer.entities.Gene;
-import DomainLayer.interfaces.MutationStrategy;
+import DomainLayer.entities.GA.Gene;
+import DomainLayer.interfaces.GA.MutationStrategy;
 
 public class Floating_Uniform implements MutationStrategy<Double> {
     private final Random rand = new Random();

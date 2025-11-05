@@ -1,4 +1,4 @@
-package PresentationLayer.GACaseStudy;
+package PresentationLayer.GACaseStudy.Schedule;
 
 import PresentationLayer.GACaseStudy.entity.Lecture;
 import PresentationLayer.GACaseStudy.entity.Room;

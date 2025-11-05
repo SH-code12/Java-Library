@@ -1,5 +1,5 @@
 
-package DomainLayer.entities;
+package DomainLayer.entities.GA;
 
 public class Gene<T> {
     private T value;

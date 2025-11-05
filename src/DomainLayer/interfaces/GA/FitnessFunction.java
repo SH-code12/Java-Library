@@ -1,6 +1,6 @@
-package DomainLayer.interfaces;
+package DomainLayer.interfaces.GA;
 
-import DomainLayer.entities.Chromosome;
+import DomainLayer.entities.GA.Chromosome;
 
 /**
  * Defines a contract for computing the fitness of a chromosome.
