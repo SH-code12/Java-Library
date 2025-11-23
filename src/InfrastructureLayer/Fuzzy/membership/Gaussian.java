@@ -2,16 +2,14 @@ package InfrastructureLayer.Fuzzy.membership;
 
 import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 
-public class Gaussian extends MembershipFunction {
+public class Gaussian implements MembershipFunction {
     private final double mean, sigma;
-
-    public Gaussian(String name, double mean,double sigma){
-        super(name);
+    public Gaussian(double mean,double sigma){
         this.mean=mean;
-        this.sigma=sigma;
-    }
+        this.sigma=sigma;}
+
     @Override
-    public double compute(double x){
+    public double membership(double x){
 
         double expo = -Math.pow(x-mean,2)/(2*sigma*sigma);
 
