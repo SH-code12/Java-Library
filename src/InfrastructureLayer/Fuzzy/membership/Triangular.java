@@ -2,15 +2,16 @@ package InfrastructureLayer.Fuzzy.membership;
 
 import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 
-public class Triangular implements MembershipFunction {
+public class Triangular extends MembershipFunction {
     private final double a, b, c;
-    public Triangular(double a, double b, double c) {
+    public Triangular(String name, double a, double b, double c) {
+        super(name);
         this.a = a;
         this.b = b;
         this.c = c;
     }
     @Override
-    public double membership(double x) {
+    public double compute(double x) {
         if (x <= a || x >= c){
             return (x==b)?1.0:0.0;
         }

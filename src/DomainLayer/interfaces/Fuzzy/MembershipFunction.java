@@ -1,6 +1,12 @@
 package DomainLayer.interfaces.Fuzzy;
 
-public interface MembershipFunction {
+public abstract class MembershipFunction {
+    protected String name; // like "Low", "Medium", "High"
 
-    double membership(double x);
-}
+    public MembershipFunction(String n){this.name = n;}
+    public String getName(){return this.name;}
+    public abstract double compute(double x);  // abstract -> all childs must implement it. 
+
+}  
+    
+ 
