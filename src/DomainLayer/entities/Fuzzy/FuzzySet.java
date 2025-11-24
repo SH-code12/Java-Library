@@ -7,11 +7,14 @@ public class FuzzySet {
     private final MembershipFunction mf;
 
     public FuzzySet(String name, MembershipFunction mf){
-        this.name=name;this.mf=mf;}
+        this.name=name;
+        this.mf=mf;
+    }
 
     public String getName(){
         return name;}
 
-    public MembershipFunction getMf()
-    {return mf;}
+    public MembershipFunction getMf() {
+        return mf;
+    }
 }
