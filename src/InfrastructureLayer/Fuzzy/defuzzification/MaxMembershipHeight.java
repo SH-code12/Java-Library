@@ -46,7 +46,12 @@ public class MaxMembershipHeight implements DefuzzificationStrategy {
                 }
                 if (mu > globalMax + EPS) {
                     globalMax = mu;
-                    try { bestX = Double.parseDouble(e.getKey()); } catch (NumberFormatException ex) { bestX = null; }
+                    try {
+                        bestX = Double.parseDouble(e.getKey());
+                    }
+                    catch (NumberFormatException ex) {
+                        bestX = null;
+                    }
                 }
             }
         }
