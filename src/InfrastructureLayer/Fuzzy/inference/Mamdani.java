@@ -15,7 +15,7 @@ public class Mamdani implements InferenceStrategy {
     private   OR_Operator orOperator = new MaxOR();
 
     public Mamdani(){}
-
+    
     @Override
     public double evaluateRule(FuzzyRule rule, Map<String, Map<String, Double>> fuzzifiedInputs) {
 

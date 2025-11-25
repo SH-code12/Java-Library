@@ -19,6 +19,6 @@ public class Sugeno implements InferenceStrategy {
     @Override
     public double evaluateRule(FuzzyRule rule, Map<String, Map<String, Double>> fuzzifiedInputs) {
         return 0;
-
+        
     }
 }

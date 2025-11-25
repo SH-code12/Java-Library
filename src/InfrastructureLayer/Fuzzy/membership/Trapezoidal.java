@@ -2,12 +2,11 @@ package InfrastructureLayer.Fuzzy.membership;
 
 import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 
-
 public class Trapezoidal implements MembershipFunction {
 
     private final double a,b,c,d;
 
-    public Trapezoidal(double a,double b,double c,double d){
+    public Trapezoidal( double a,double b,double c,double d){
         this.a=a;
         this.b=b;
         this.c=c;
@@ -16,9 +15,6 @@ public class Trapezoidal implements MembershipFunction {
 
     @Override
     public double membership(double x){
-        if (x<=a || x>=d) return 0.0;
-        if (x>=b && x<=c) return 1.0;
-        if (x>a && x<b) return (x-a)/(b-a);
         if (x<=a || x>=d){
             return 0.0;
         }

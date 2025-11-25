@@ -7,6 +7,7 @@ import java.util.Map;
 
 import DomainLayer.entities.Fuzzy.FuzzySet;
 import DomainLayer.interfaces.Fuzzy.FuzzificationStrategy;
+import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 
 public class SimpleFuzzifier implements FuzzificationStrategy{
     private List<FuzzySet> fs;

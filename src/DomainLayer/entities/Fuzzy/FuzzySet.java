@@ -4,7 +4,6 @@ import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 
 public class FuzzySet {
     private final String name;
-
     private final MembershipFunction mf;
 
     public FuzzySet(String name, MembershipFunction mf){

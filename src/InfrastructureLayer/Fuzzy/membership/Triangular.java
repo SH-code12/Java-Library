@@ -11,9 +11,6 @@ public class Triangular implements MembershipFunction {
     }
     @Override
     public double membership(double x) {
-        if (x <= a || x >= c) return (x==b)?1.0:0.0;
-        if (x == b) return 1.0;
-        if (x > a && x < b) return (x - a) / (b - a);
         if (x <= a || x >= c){
             return (x==b)?1.0:0.0;
         }
