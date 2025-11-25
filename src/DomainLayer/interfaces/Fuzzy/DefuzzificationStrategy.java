@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface DefuzzificationStrategy {
 
-    double defuzzify(Map<String, Map<String, Double>> inferred, LinguisticVariable outputVariable);
+    double defuzzify(Map<String,Double> inferred, LinguisticVariable outputVariable);
 }

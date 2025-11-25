@@ -25,4 +25,15 @@ public class Triangular implements MembershipFunction {
         }
         return (c - x) / (c - b);
     }
+
+    public double getA() {
+        return a;
+    }
+    public double getB() {
+        return b;
+    }
+    public double getC() {
+        return c;
+    }
+
 }

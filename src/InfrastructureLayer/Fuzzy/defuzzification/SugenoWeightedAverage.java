@@ -3,7 +3,9 @@ package InfrastructureLayer.Fuzzy.defuzzification;
 import DomainLayer.interfaces.Fuzzy.DefuzzificationStrategy;
 import DomainLayer.entities.Fuzzy.LinguisticVariable;
 import java.util.Map;
-
+import DomainLayer.entities.Fuzzy.FuzzySet;
+import InfrastructureLayer.Fuzzy.membership.Trapezoidal;
+import InfrastructureLayer.Fuzzy.membership.Triangular;
 
 /**
  * Weighted Average defuzzifier (general Mamdani variant):
@@ -16,71 +18,45 @@ import java.util.Map;
  */
 public class SugenoWeightedAverage implements DefuzzificationStrategy {
 
-    private static final double EPS = 1e-12;
-
     private double midpoint(LinguisticVariable lv) {
-        if (lv == null) {
-            return 0.0;
-        }
+        if (lv == null) return 0.0;
         return (lv.getMin() + lv.getMax()) / 2.0;
     }
 
     @Override
-    public double defuzzify(Map<String, Map<String, Double>> inferred, LinguisticVariable outputVariable) {
-        if (inferred == null || inferred.isEmpty()) return midpoint(outputVariable);
+    public double defuzzify(Map<String, Double> fuzzyValues, LinguisticVariable outputVariable) {
+        if (fuzzyValues == null || fuzzyValues.isEmpty()) {
+            return midpoint(outputVariable);
+        }
 
         double numerator = 0.0;
         double denominator = 0.0;
 
-        for (Map<String, Double> samples : inferred.values()) {
-            if (samples == null || samples.isEmpty()){
-                continue;
-            }
-
-            double maxMu = Double.NEGATIVE_INFINITY;
-            double centroidNum = 0.0;
-            double centroidDen = 0.0;
-
-            for (Map.Entry<String, Double> e : samples.entrySet()) {
-                Double mu = e.getValue();
-                if (mu == null){
-                    continue;
-                }
-                double x;
-                try {
-                    x = Double.parseDouble(e.getKey());
-                } catch (NumberFormatException ex) {
-                    continue;
-                }
-                if (mu > maxMu){
-                    maxMu = mu;
-                }
-                centroidNum += x * mu;
-                centroidDen += mu;
-            }
-
-            if (maxMu <= 0.0 || maxMu == Double.NEGATIVE_INFINITY) {
+        for (Map.Entry<String, Double> e : fuzzyValues.entrySet()) {
+            double degree = e.getValue();
+            FuzzySet set = outputVariable.getFuzzySets().get(e.getKey());
+            if (set == null) {
                 continue;
             }
 
             double zi;
-            if (centroidDen > EPS){
-                zi = centroidNum / centroidDen;
-            }
-            else {
-                // fallback representative: choose mid of output domain
-                zi = midpoint(outputVariable);
+            if (set.getMf() instanceof Triangular tri) {
+                zi = (tri.getA() + tri.getB() + tri.getC())/3.0;
+
+            } else if (set.getMf() instanceof Trapezoidal trap) {
+                zi = (trap.getA() + 2*trap.getB() + 2*trap.getC() + trap.getD())/6.0;
+
+            } else {
+                zi = (outputVariable.getMin() + outputVariable.getMax())/2.0;
             }
 
-            numerator += maxMu * zi;
-            denominator += maxMu;
+            numerator += degree * zi;
+            denominator += degree;
         }
 
-        if (denominator == 0.0) {
-            return midpoint(outputVariable);
-        }
-        return numerator / denominator;
+        return denominator == 0.0 ? midpoint(outputVariable) : numerator / denominator;
     }
 }
+
 
 

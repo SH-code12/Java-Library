@@ -30,4 +30,17 @@ public class Trapezoidal implements MembershipFunction {
         }
         return (d-x)/(d-c);
     }
+
+    public double getA() {
+        return a;
+    }
+    public double getB() {
+        return b;
+    }
+    public double getC() {
+        return c;
+    }
+    public double getD() {
+        return d;
+    }
 }
