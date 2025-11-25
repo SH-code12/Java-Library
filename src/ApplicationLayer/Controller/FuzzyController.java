@@ -8,6 +8,11 @@ import java.util.Map;
 import DomainLayer.entities.Fuzzy.FuzzyRule;
 import DomainLayer.entities.Fuzzy.FuzzySet;
 import DomainLayer.entities.Fuzzy.LinguisticVariable;
+import DomainLayer.interfaces.Fuzzy.InputValidator;
+import InfrastructureLayer.Fuzzy.defuzzification.Centroid;
+import InfrastructureLayer.Fuzzy.defuzzification.MaxMembershipHeight;
+import InfrastructureLayer.Fuzzy.defuzzification.MeanOfMaxMembership;
+import InfrastructureLayer.Fuzzy.defuzzification.SugenoWeightedAverage;
 import InfrastructureLayer.Fuzzy.fuzzification.SimpleFuzzifier;
 import InfrastructureLayer.Fuzzy.inference.Mamdani;
 import InfrastructureLayer.Fuzzy.inference.Sugeno;
@@ -15,6 +20,7 @@ import InfrastructureLayer.Fuzzy.membership.Triangular;
 import InfrastructureLayer.Fuzzy.operators.MaxOR;
 import InfrastructureLayer.Fuzzy.operators.MinAND;
 import InfrastructureLayer.Fuzzy.operators.MinImplication;
+import InfrastructureLayer.Fuzzy.validation.ClampInputValidator;
 
 public class FuzzyController {
 
@@ -34,6 +40,21 @@ public class FuzzyController {
         Quality.addFuzzySet(new FuzzySet("Bad", new Triangular( 0, 0, 5)));
         Quality.addFuzzySet(new FuzzySet("Medium", new Triangular( 0, 5, 10 )));
         Quality.addFuzzySet(new FuzzySet("Good", new Triangular(5, 10, 10)));
+        //========================================================================================
+        // make input to map
+        Map<String, LinguisticVariable> inputVars = Map.of(
+                "Size", Size,
+                "Weight", Weight
+        );
+        Map<String, Double> crispInputs = new HashMap<>();
+        crispInputs.put("Size", 20.0);
+        crispInputs.put("Weight", 25.0);
+
+        // ===================== Validate inputs =======================
+        InputValidator validator = new ClampInputValidator(); // can use DefaultInputValidator
+        Map<String, Double> validatedInputs = validator.validate(crispInputs, inputVars);
+        System.out.println("Validated Inputs: " + validatedInputs);
+
         //=====================================================================================
         // STEP1: FuzzififCation
         Map<String, Map<String, Double>> allFuzzyValues = new HashMap<>();
@@ -95,7 +116,22 @@ public class FuzzyController {
  
         
         //=====================================================================================
- 
+        // ===================== Defuzzification =======================
+        Centroid centroid = new Centroid();
+        MaxMembershipHeight maxHeight = new MaxMembershipHeight();
+        MeanOfMaxMembership mom = new MeanOfMaxMembership();
+        SugenoWeightedAverage swa = new SugenoWeightedAverage();
+
+        double defuzzCentroid = centroid.defuzzify(mamdaniOutputs, Quality);
+        double defuzzMaxHeight = maxHeight.defuzzify(mamdaniOutputs, Quality);
+        double defuzzMoM = mom.defuzzify(mamdaniOutputs, Quality);
+        double defuzzWeighted = swa.defuzzify(mamdaniOutputs, Quality);
+
+        System.out.printf("Defuzzified Outputs:%n");
+        System.out.printf("Centroid: %.4f%n", defuzzCentroid);
+        System.out.printf("MaxMembershipHeight: %.4f%n", defuzzMaxHeight);
+        System.out.printf("MeanOfMaxMembership: %.4f%n", defuzzMoM);
+        System.out.printf("Sugeno Weighted Average: %.4f%n", defuzzWeighted);
          
     }
 }
