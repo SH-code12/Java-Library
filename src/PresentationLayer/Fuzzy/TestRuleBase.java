@@ -2,28 +2,27 @@ package PresentationLayer.Fuzzy;
 
 import DomainLayer.entities.Fuzzy.FuzzyRule;
 import DomainLayer.entities.Fuzzy.RuleBase;
+import InfrastructureLayer.Fuzzy.rulebase.RuleBaseEditor;
 
+import java.io.File;
 import java.util.Map;
 
 public class TestRuleBase {
     public static void main(String[] args) {
+
         System.out.println("=== 1. Testing Rule Creation ===");
 
-        // Scenario: IF Temperature is High AND Humidity is Low THEN FanSpeed is Fast
+        // Rule 1: IF Temperature is High AND Humidity is Low THEN FanSpeed is Fast
         FuzzyRule rule1 = new FuzzyRule(1);
         rule1.addAntecedent("Temperature", "High");
         rule1.addOperator("AND");
         rule1.addAntecedent("Humidity", "Low");
         rule1.addConsequent("FanSpeed", "Fast");
 
-        // FIX: Print the ID, not the operator list
-
         System.out.println("Rule 1 Created: ID " + rule1.getId());
-
-        // FIX: Logic check
         System.out.println("Antecedents count: " + rule1.getAntecedents().size());
 
-        // Scenario: Sugeno Rule
+        // Rule 2: Sugeno-style rule
         FuzzyRule rule2 = new FuzzyRule(2);
         rule2.addAntecedent("Traffic", "Heavy");
         rule2.addCrispConsequent("LightTime", 10);
@@ -31,57 +30,63 @@ public class TestRuleBase {
 
         System.out.println("Rule 2 Created with Weight: " + rule2.getWeight());
 
-        System.out.println("\n=== 2. Testing RuleBase API (Manager) ===");
+        System.out.println("\n=== 2. Testing RuleBaseEditor API ===");
+
         RuleBase ruleBase = new RuleBase();
+        RuleBaseEditor editor = new RuleBaseEditor(ruleBase);
 
-        // Add Rules
-        ruleBase.addRule(rule1);
-        ruleBase.addRule(rule2);
+        // Add rules
+        editor.addRule(rule1);
+        editor.addRule(rule2);
 
-        // FIX: Matches your naming convention .getRules()
         System.out.println("Total Rules: " + ruleBase.getRules().size());
-
-        // FIX: Matches your naming convention .getEnabledRules()
         System.out.println("Active Rules before disable: " + ruleBase.getEnabledRules().size());
 
-        // Test Disable
+        // Disable Rule 1
         System.out.println("-> Disabling Rule 1...");
-
-        // FIX: Pass int ID directly. 'FuzzyOperator' is for logic (AND/OR), not IDs.
-        ruleBase.setRuleStatus(1, false);
-
+        editor.enableRule(1, false);
         System.out.println("Active Rules after disable: " + ruleBase.getEnabledRules().size());
 
-        // Test Edit (Update)
+        // Update Rule 2 but preserve its weight
         System.out.println("-> Updating Rule 2...");
-        FuzzyRule newRule2 = new FuzzyRule(2);
-        newRule2.addAntecedent("Traffic", "Medium");
-        newRule2.addCrispConsequent("LightTime", 30);
+        FuzzyRule updatedRule2 = new FuzzyRule(2);
+        updatedRule2.addAntecedent("Traffic", "Medium");
+        updatedRule2.addCrispConsequent("LightTime", 30);
+        updatedRule2.setWeight(ruleBase.findRulebyId(2).getWeight()); // Preserve weight
 
-        // FIX: Pass int ID directly
-        ruleBase.updateRule(2, newRule2);
+        editor.updateRule(2, updatedRule2);
 
-        // Verify Update
-        FuzzyRule updated = ruleBase.getRules().get(1); // Get the second rule
+        // Verify update
+        FuzzyRule checkRule2 = ruleBase.findRulebyId(2);
+        System.out.println("Rule 2 Variable is now: " + checkRule2.getAntecedents().get("Traffic"));
+        System.out.println("Rule 2 Weight is now: " + checkRule2.getWeight());
 
-        // FIX: Maps are accessed by KEY ("Traffic"), not by Index or Optional
-        String val = updated.getAntecedents().get("Traffic");
-        System.out.println("Rule 2 Variable is now: " + val);
+        // Set weight for Rule 1
+        editor.setRuleWeight(1, 0.75);
+        System.out.println("Rule 1 weight: " + ruleBase.findRulebyId(1).getWeight());
 
         System.out.println("\n=== 3. Testing Persistence (Save/Load) ===");
 
-        // 1. Save the current rules (Rule 1 disabled, Rule 2 updated)
-        ruleBase.saveRulesToFile("rules_test.txt");
+        File f = new File("rules_test.txt");
+        System.out.println("File exists before save: " + f.exists() + ", size: " + f.length());
 
-        // 2. Create a fresh RuleBase and load them back
+        // Save current rules
+        editor.saveRulesToFile("rules_test.txt");
+        System.out.println("File saved. Size after save: " + f.length());
+
+        // Create fresh RuleBase and editor
         RuleBase loadedBase = new RuleBase();
-        loadedBase.loadRulesFromFile("rules_test.txt");
+        RuleBaseEditor loadedEditor = new RuleBaseEditor(loadedBase);
+        loadedEditor.loadRulesFromFile("rules_test.txt");
 
-        // 3. Verify
-        System.out.println("Loaded Rules Count: " + loadedBase.getRules().size()); // Should be 2
+        // Verify loaded rules
+        System.out.println("Loaded Rules Count: " + loadedBase.getRules().size());
 
-        FuzzyRule loadedRule2 = loadedBase.getRules().get(1);
-        System.out.println("Loaded Rule 2 Weight: " + loadedRule2.getWeight()); // Should be 0.8
-        System.out.println("Loaded Rule 2 Output: " + loadedRule2.getCrispConsequents().get("LightTime")); // Should be 30.0
+        FuzzyRule loadedRule1 = loadedBase.findRulebyId(1);
+        FuzzyRule loadedRule2 = loadedBase.findRulebyId(2);
+
+        System.out.println("Loaded Rule 1 Enabled: " + loadedRule1.isEnabled() + ", Weight: " + loadedRule1.getWeight());
+        System.out.println("Loaded Rule 2 Enabled: " + loadedRule2.isEnabled() + ", Weight: " + loadedRule2.getWeight());
+        System.out.println("Loaded Rule 2 Output: " + loadedRule2.getCrispConsequents().get("LightTime"));
     }
 }

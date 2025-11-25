@@ -8,30 +8,6 @@ public class RuleBase {
 
     private List<FuzzyRule> rules = new ArrayList<>();
 
-    public void addRule(FuzzyRule r){
-        rules.add(r);
-
-    }
-    public void updateRule(int id, FuzzyRule rule ){
-        for(int i =0;i< rules.size();i++){
-            if(rules.get(i).getId()==id){
-                rules.set(i,rule);
-            }
-        }
-    }
-
-    public void setRuleStatus(int id, boolean isActive){
-        FuzzyRule r = findRulebyId(id);
-        if (r != null) {
-            r.setEnabled(isActive);
-        }
-    }
-    public void setRuleWeight(int id, double weight) {
-        FuzzyRule r = findRulebyId(id);
-        if (r != null) {
-            r.setWeight(weight);
-        }
-    }
     public List<FuzzyRule> getEnabledRules(){
         List<FuzzyRule> enabledRules = new ArrayList<>();
         for(FuzzyRule r: rules){
@@ -40,7 +16,19 @@ public class RuleBase {
         return enabledRules;
     }
 
-    private FuzzyRule findRulebyId(int id){
+    public void addRule(FuzzyRule r){
+        rules.add(r);
+    }
+
+    public void updateRule(int id, FuzzyRule rule ){
+        for(int i =0;i< rules.size();i++){
+            if(rules.get(i).getId()==id){
+                rules.set(i,rule);
+            }
+        }
+    }
+
+    public FuzzyRule findRulebyId(int id){
         for( FuzzyRule r: rules){
             if(r.getId()==id){
                return r;
@@ -52,6 +40,7 @@ public class RuleBase {
     public List<FuzzyRule> getRules(){
         return rules;
     }
+
     public void saveRulesToFile(String filename) {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))){
             for(FuzzyRule r:rules){
@@ -91,22 +80,15 @@ public class RuleBase {
                     sz--;
                     if(sz > 0) s.append(",");
                 }
-
-
                 writer.write(s.toString());
                 writer.newLine();
 
-
-
-
             }
-
 
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public void loadRulesFromFile(String filename){
@@ -155,4 +137,5 @@ public class RuleBase {
             e.printStackTrace();
         }
     }
+
 }
