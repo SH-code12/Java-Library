@@ -1,2 +1,0 @@
-1|1.0|false|Temperature:High,Humidity:Low|AND|FanSpeed:Fast|
-2|1.0|true|Traffic:Medium|||LightTime:30
