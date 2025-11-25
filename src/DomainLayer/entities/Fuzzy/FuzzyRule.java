@@ -15,12 +15,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class FuzzyRule {
+    int id ;
+    private double weight = 1.0;
+    private boolean isEnabled = true;
      
     private final Map<String, String> antecedents = new LinkedHashMap<>();
     private final List<String> operators = new ArrayList<>();
     private final Map<String, String> Consequents = new LinkedHashMap<>();
-    private final Map<String, Integer> CrispConsequents = new LinkedHashMap<>();
-    
+    private final Map<String,Integer> CrispConsequents = new LinkedHashMap<>();
+
+
+
+    public FuzzyRule() {
+    }
+    public FuzzyRule(int id) {
+
+        this.id = id;
+    }
+
     // Antecedent List and its inside Operators List 
     public void addAntecedent(String variableName, String fuzzySetName) {
         antecedents.put(variableName, fuzzySetName);
@@ -51,5 +63,23 @@ public class FuzzyRule {
     public Map<String, Integer> getCrispConsequents() {
         return CrispConsequents;
     }
-     
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public int getId() {
+        return id;
+    }
 }
