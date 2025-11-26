@@ -156,14 +156,12 @@ public class StockMarketModel {
         System.out.println("Select defuzzification strategy:\n" +
                 " 1. Default / Centroid\n" +
                 " 2.MaxMembershipHeight\n" +
-                " 3.MeanOfMaxMembership\n" +
-                " 4.SugenoWeightedAverage\n");
+                " 3.MeanOfMaxMembership\n") ;
         int dChoice = scanner.nextInt();
         DefuzzificationStrategy defuzz = switch (dChoice) {
             case 2 -> new MaxMembershipHeight();
             case 3 -> new MeanOfMaxMembership();
-            case 4 -> new SugenoWeightedAverage();
-            default -> null;
+            default -> new Centroid();
         };
 
         system.setDefuzzifier(defuzz);
