@@ -13,6 +13,10 @@ public class LinguisticVariable {
         this.min=min;
         this.max=max;}
 
+    public LinguisticVariable(String name) {
+        this(name,0,100);
+    }
+
     public String getName(){
         return name;}
 

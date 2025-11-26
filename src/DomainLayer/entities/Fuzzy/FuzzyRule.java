@@ -35,6 +35,7 @@ public class FuzzyRule {
 
     // Antecedent List and its inside Operators List 
     public void addAntecedent(String variableName, String fuzzySetName) {
+
         antecedents.put(variableName, fuzzySetName);
     }
     public Map<String, String> getAntecedents() {
@@ -45,6 +46,13 @@ public class FuzzyRule {
         operators.add(OperatorName);
     }
     public List<String> getOperators() {
+        int requiredOperators = antecedents.size() - 1;
+
+        if (requiredOperators > 0) {
+            while (operators.size() < requiredOperators) {
+                operators.add("AND"); // Sensible Default
+            }
+        }
         return operators;
     }
 
