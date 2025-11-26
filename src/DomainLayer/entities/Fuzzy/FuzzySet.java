@@ -4,11 +4,14 @@ import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 
 public class FuzzySet {
     private final String name;
-    private final MembershipFunction mf;
+    private  MembershipFunction mf;
 
     public FuzzySet(String name, MembershipFunction mf){
         this.name=name;
         this.mf=mf;
+    }
+    public void setMembershipFunction(MembershipFunction membershipFunction) {
+        this.mf = membershipFunction;
     }
 
     public String getName(){

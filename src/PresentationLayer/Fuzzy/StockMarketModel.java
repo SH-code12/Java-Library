@@ -106,6 +106,9 @@ public class StockMarketModel {
             system.loadRules(filename);
             System.out.println("Rules loaded successfully.");
         }
+
+        chooseMembershipFn(scanner);
+
         Map<String, Double> inputs = new HashMap<>();
 
         // Enter crisp input values WITH RANGE DISPLAY
@@ -178,10 +181,76 @@ public class StockMarketModel {
             system.saveRules(filename);
             System.out.println("Rules saved.");
         }
-        else
+
             system.printDebug();
 
         // Show final crisp output
        // System.out.println("\nFinal crisp output: " + pipeline.getCrispOutput());
+    }
+
+    private void chooseMembershipFn(Scanner scanner){
+        System.out.println("Do you want to customize Membership Functions for any variable? (y/n)");
+        if (!scanner.next().equalsIgnoreCase("y")) {
+            return;
+        }
+        while(true){
+            System.out.println("\nSelect a variable to edit (or type 'exit' to finish):");
+            for (String varName : system.getInputVariableNames()) {
+                System.out.println(" - " + varName);
+            }
+            System.out.println(" - Decision (Output)");
+            String varName = scanner.next();
+            if (varName.equalsIgnoreCase("exit")) break;
+            LinguisticVariable selectedVar = system.getInputVariables().get(varName);
+            if (selectedVar == null && system.getInputVariables().containsKey(varName) == false) {
+                // Check if it is the output variable (assuming we have a getter or access to it)
+                // Note: In your current FuzzySystem, you might need a getter for outputVariable.
+                // For now, let's assume we are editing Inputs only, or you expose outputVariable.
+                System.out.println("Variable not found (or is output variable without getter).");
+                continue;
+            }
+            System.out.println("Select a Fuzzy Set to modify:");
+            Map<String, FuzzySet> sets = selectedVar.getFuzzySets();
+            for (String setName : sets.keySet()) {
+                System.out.println(" - " + setName);
+            }
+            String setName = scanner.next();
+            FuzzySet selectedSet = sets.get(setName);
+
+            if (selectedSet == null) {
+                System.out.println("Fuzzy set not found.");
+                continue;
+            }
+            System.out.println("Current MF: " + selectedSet.getName());
+            System.out.println("Select new shape:\n 1. Triangular\n 2. Trapezoidal\n 3. Gaussian");
+            int shapeChoice = scanner.nextInt();
+
+            try {
+                MembershipFunction newMF = createMembershipFunction(shapeChoice, scanner);
+                // Update the set (assuming FuzzySet has a setter, otherwise we replace the object)
+                selectedSet.setMembershipFunction(newMF);
+                System.out.println("Membership function updated successfully!");
+            } catch (Exception e) {
+                System.out.println("Error creating MF: " + e.getMessage());
+            }
+
+        }
+    }
+    private MembershipFunction createMembershipFunction(int choice, Scanner scanner) {
+        return switch (choice) {
+            case 1 -> {
+                System.out.print("Enter a (left), b (peak), c (right): ");
+                yield new Triangular(scanner.nextDouble(), scanner.nextDouble(), scanner.nextDouble());
+            }
+            case 2 -> {
+                System.out.print("Enter a (left), b (left-peak), c (right-peak), d (right): ");
+                yield new Trapezoidal(scanner.nextDouble(), scanner.nextDouble(), scanner.nextDouble(), scanner.nextDouble());
+            }
+            case 3 -> {
+                System.out.print("Enter mean (center) and sigma (width): ");
+                yield new Gaussian(scanner.nextDouble(), scanner.nextDouble());
+            }
+            default -> throw new IllegalArgumentException("Invalid shape choice");
+        };
     }
 }
