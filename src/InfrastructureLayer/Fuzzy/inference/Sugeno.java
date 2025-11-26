@@ -18,7 +18,29 @@ public class Sugeno implements InferenceStrategy {
 
     @Override
     public double evaluateRule(FuzzyRule rule, Map<String, Map<String, Double>> fuzzifiedInputs) {
-        return 0;
+        double Output = 0.0;
+        var antecedents = rule.getAntecedents();
+        var operators = rule.getOperators();
+
+        int idx = 0;
+        for (var entry : antecedents.entrySet()) {
+            String variable = entry.getKey();
+            String fuzzySet = entry.getValue();
+
+            double value = fuzzifiedInputs.get(variable).get(fuzzySet);
+
+            if (idx == 0) Output = value;
+            else {
+                String op = operators.get(idx - 1);
+                if (op.equalsIgnoreCase("AND")) Output = andOperator.and(Output, value);
+                else if (op.equalsIgnoreCase("OR")) Output = orOperator.or(Output, value);
+            }
+            idx++;
+        }
+        String ConsequentVariable = rule.getCrispConsequents().keySet().iterator().next();
+        double ConsequentValue = rule.getCrispConsequents().get(ConsequentVariable);
+
+        return Output * ConsequentValue;
         
     }
 }
