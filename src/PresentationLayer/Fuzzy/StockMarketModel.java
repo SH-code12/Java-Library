@@ -172,20 +172,6 @@ public class StockMarketModel {
         system.setInferenceEngine(inference);
         system.setDefuzzifier(defuzz);
 
-        // Choose defuzzifier
-//        System.out.println("Select defuzzification strategy:\n" +
-//                " 1. Default / Centroid\n" +
-//                " 2.MaxMembershipHeight\n" +
-//                " 3.MeanOfMaxMembership\n") ;
-//        int dChoice = scanner.nextInt();
-//        DefuzzificationStrategy defuzz = switch (dChoice) {
-//            case 2 -> new MaxMembershipHeight();
-//            case 3 -> new MeanOfMaxMembership();
-//            default -> new Centroid();
-//        };
-
-//        system.setDefuzzifier(defuzz);
-
         // Evaluate the fuzzy system
         FuzzyIOPipeline pipeline = system.evaluate(validatedInputs);
 
@@ -202,8 +188,6 @@ public class StockMarketModel {
 
         system.printDebug();
 
-        // Show final crisp output
-        // System.out.println("\nFinal crisp output: " + pipeline.getCrispOutput());
     }
 
     private void chooseMembershipFn(Scanner scanner){
