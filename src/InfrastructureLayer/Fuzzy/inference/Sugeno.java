@@ -7,6 +7,8 @@ import DomainLayer.interfaces.Fuzzy.OR_Operator;
 import InfrastructureLayer.Fuzzy.operators.MaxOR;
 import InfrastructureLayer.Fuzzy.operators.MinAND;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Sugeno implements InferenceStrategy {
@@ -16,6 +18,7 @@ public class Sugeno implements InferenceStrategy {
 
     public Sugeno(){}
 
+    //===========================================================================
     @Override
     public double evaluateRule(FuzzyRule rule, Map<String, Map<String, Double>> fuzzifiedInputs) {
         double Output = 0.0;
@@ -37,10 +40,19 @@ public class Sugeno implements InferenceStrategy {
             }
             idx++;
         }
-        String ConsequentVariable = rule.getCrispConsequents().keySet().iterator().next();
-        double ConsequentValue = rule.getCrispConsequents().get(ConsequentVariable);
-
-        return Output * ConsequentValue;
+        return Output;
         
     }
+    //===========================================================================
+    public List<Double> evaluateRules(List<FuzzyRule> rules, Map<String, Map<String, Double>> fuzzifiedInputs) {
+        List <Double> activations = new ArrayList();
+        for (int i = 0; i < rules.size(); i++) {
+            FuzzyRule rule = rules.get(i);
+            double value = evaluateRule(rule, fuzzifiedInputs); // based on which call it Mamdani or Sugeno
+            // Get the first entry (if you only have one)
+            activations.add(value);
+        }
+        return activations;
+    }
+    //===========================================================================
 }

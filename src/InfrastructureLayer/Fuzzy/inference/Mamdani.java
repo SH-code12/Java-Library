@@ -7,6 +7,8 @@ import DomainLayer.interfaces.Fuzzy.OR_Operator;
 import InfrastructureLayer.Fuzzy.operators.MaxOR;
 import InfrastructureLayer.Fuzzy.operators.MinAND;
 
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Mamdani implements InferenceStrategy {
@@ -15,7 +17,23 @@ public class Mamdani implements InferenceStrategy {
     private   OR_Operator orOperator = new MaxOR();
 
     public Mamdani(){}
+
+    //===========================================================================
+    public Map<String, Double> evaluateRules(List<FuzzyRule> rules, Map<String, Map<String, Double>> fuzzifiedInputs) {
+        Map<String, Double> activations = new LinkedHashMap<>();
+        for (int i = 0; i < rules.size(); i++) {
+            FuzzyRule rule = rules.get(i);
+            double value = evaluateRule(rule, fuzzifiedInputs); // based on which call it Mamdani or Sugeno
     
+            String ConsequentVariable = rule.getConsequents().keySet().iterator().next();
+            String ConsequentName = rule.getConsequents().get(ConsequentVariable);
+            // final Result Map :)
+            activations.put(ConsequentName, value);
+             
+        }
+        return activations;
+    }
+    //===========================================================================
     @Override
     public double evaluateRule(FuzzyRule rule, Map<String, Map<String, Double>> fuzzifiedInputs) {
 
@@ -41,4 +59,6 @@ public class Mamdani implements InferenceStrategy {
 
         return Output;
     }
+    //===========================================================================
+    
 }

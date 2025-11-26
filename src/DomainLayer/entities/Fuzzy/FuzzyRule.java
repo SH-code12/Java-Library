@@ -1,16 +1,7 @@
 package DomainLayer.entities.Fuzzy;
 
-import DomainLayer.interfaces.Fuzzy.MembershipFunction;
 import java.util.Map;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import DomainLayer.interfaces.Fuzzy.MembershipFunction;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -22,7 +13,7 @@ public class FuzzyRule {
     private final Map<String, String> antecedents = new LinkedHashMap<>();
     private final List<String> operators = new ArrayList<>();
     private final Map<String, String> Consequents = new LinkedHashMap<>();
-    private final Map<String,Integer> CrispConsequents = new LinkedHashMap<>();
+    private final Map<String,Double> CrispConsequents = new LinkedHashMap<>();
 
 
 
@@ -65,10 +56,10 @@ public class FuzzyRule {
     }
     
     // Consequents for "Sugeno"
-    public void addCrispConsequent(String variableName, int value) {
+    public void addCrispConsequent(String variableName, double value) {
         CrispConsequents.put(variableName, value);
     }
-    public Map<String, Integer> getCrispConsequents() {
+    public Map<String, Double> getCrispConsequents() {
         return CrispConsequents;
     }
     public void setWeight(double weight) {
