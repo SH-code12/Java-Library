@@ -148,7 +148,7 @@ public class StockMarketModel {
         int iChoice = scanner.nextInt();
         InferenceStrategy inference = switch (iChoice) {
             case 2 -> new Sugeno();
-            default -> null;
+            default -> new Mamdani();
         };
         system.setInferenceEngine(inference);
 
