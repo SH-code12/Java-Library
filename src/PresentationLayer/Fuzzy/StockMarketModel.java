@@ -146,25 +146,45 @@ public class StockMarketModel {
                 " 1.Default/Mamdani \n" +
                 " 2.Sugeno \n");
         int iChoice = scanner.nextInt();
-        InferenceStrategy inference = switch (iChoice) {
-            case 2 -> new Sugeno();
-            default -> new Mamdani();
-        };
+        InferenceStrategy inference = null;
+        DefuzzificationStrategy defuzz = null;
+        switch (iChoice) {
+            case 2 -> {
+                inference = new Sugeno();
+                defuzz = new SugenoWeightedAverage();
+                System.out.println("Sugeno inference selected. Using SugenoWeightedAverage defuzzifier automatically.");
+            }
+            default -> {
+                inference = new Mamdani();
+                // Let user select defuzzification for Mamdani
+                System.out.println("Select defuzzification strategy:\n"
+                        + " 1. Default / Centroid\n"
+                        + " 2. MaxMembershipHeight\n"
+                        + " 3. MeanOfMaxMembership\n");
+                int dChoice = scanner.nextInt();
+                defuzz = switch (dChoice) {
+                    case 2 -> new MaxMembershipHeight();
+                    case 3 -> new MeanOfMaxMembership();
+                    default -> new Centroid();
+                };
+            }
+        }
         system.setInferenceEngine(inference);
+        system.setDefuzzifier(defuzz);
 
         // Choose defuzzifier
-        System.out.println("Select defuzzification strategy:\n" +
-                " 1. Default / Centroid\n" +
-                " 2.MaxMembershipHeight\n" +
-                " 3.MeanOfMaxMembership\n") ;
-        int dChoice = scanner.nextInt();
-        DefuzzificationStrategy defuzz = switch (dChoice) {
-            case 2 -> new MaxMembershipHeight();
-            case 3 -> new MeanOfMaxMembership();
-            default -> new Centroid();
-        };
+//        System.out.println("Select defuzzification strategy:\n" +
+//                " 1. Default / Centroid\n" +
+//                " 2.MaxMembershipHeight\n" +
+//                " 3.MeanOfMaxMembership\n") ;
+//        int dChoice = scanner.nextInt();
+//        DefuzzificationStrategy defuzz = switch (dChoice) {
+//            case 2 -> new MaxMembershipHeight();
+//            case 3 -> new MeanOfMaxMembership();
+//            default -> new Centroid();
+//        };
 
-        system.setDefuzzifier(defuzz);
+//        system.setDefuzzifier(defuzz);
 
         // Evaluate the fuzzy system
         FuzzyIOPipeline pipeline = system.evaluate(validatedInputs);
@@ -180,10 +200,10 @@ public class StockMarketModel {
             System.out.println("Rules saved.");
         }
 
-            system.printDebug();
+        system.printDebug();
 
         // Show final crisp output
-       // System.out.println("\nFinal crisp output: " + pipeline.getCrispOutput());
+        // System.out.println("\nFinal crisp output: " + pipeline.getCrispOutput());
     }
 
     private void chooseMembershipFn(Scanner scanner){
