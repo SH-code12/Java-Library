@@ -181,7 +181,16 @@ public class FuzzySystem {
         }
 
         System.out.println("\n===== CRISP OUTPUT =====");
-        System.out.printf("Crisp value: %.4f%n", crispOutput);
+        if (crispOutput >= 0 && crispOutput <= 40){
+            System.out.printf("Crisp value %.4f%n Decision --> Sell. \n", crispOutput );
+
+        }else if (crispOutput > 40 && crispOutput <= 60){
+            System.out.printf("Crisp value %.4f%n Decision --> Hold. \n", crispOutput );
+
+        }else{
+            System.out.printf("Crisp value %.4f%n Decision --> Buy. \n", crispOutput );
+        }
+//        System.out.printf("Crisp value: %.4f%n", crispOutput);
     }
 
     public Set<String> getInputVariableNames() {
