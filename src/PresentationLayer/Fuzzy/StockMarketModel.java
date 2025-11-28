@@ -146,28 +146,24 @@ public class StockMarketModel {
                 " 1.Default/Mamdani \n" +
                 " 2.Sugeno \n");
         int iChoice = scanner.nextInt();
-        InferenceStrategy inference = null;
-        DefuzzificationStrategy defuzz = null;
-        switch (iChoice) {
-            case 2 -> {
-                inference = new Sugeno();
-                defuzz = new SugenoWeightedAverage();
-                System.out.println("Sugeno inference selected. Using SugenoWeightedAverage defuzzifier automatically.");
-            }
-            default -> {
-                inference = new Mamdani();
-                // Let user select defuzzification for Mamdani
-                System.out.println("Select defuzzification strategy:\n"
-                        + " 1. Default / Centroid\n"
-                        + " 2. MaxMembershipHeight\n"
-                        + " 3. MeanOfMaxMembership\n");
-                int dChoice = scanner.nextInt();
-                defuzz = switch (dChoice) {
-                    case 2 -> new MaxMembershipHeight();
-                    case 3 -> new MeanOfMaxMembership();
-                    default -> new Centroid();
-                };
-            }
+        InferenceStrategy inference;
+        DefuzzificationStrategy defuzz;
+        if (iChoice == 2) {
+            inference = new Sugeno();
+            defuzz = new SugenoWeightedAverage();
+            System.out.println("Sugeno inference selected with numeric outputs.");
+        } else {
+            inference = new Mamdani();
+            System.out.println("Select defuzzification strategy:\n " +
+                    "1.Centroid\n " +
+                    "2.MaxMembershipHeight\n " +
+                    "3.MeanOfMaxMembership");
+            int dChoice = scanner.nextInt();
+            defuzz = switch (dChoice) {
+                case 2 -> new MaxMembershipHeight();
+                case 3 -> new MeanOfMaxMembership();
+                default -> new Centroid();
+            };
         }
         system.setInferenceEngine(inference);
         system.setDefuzzifier(defuzz);

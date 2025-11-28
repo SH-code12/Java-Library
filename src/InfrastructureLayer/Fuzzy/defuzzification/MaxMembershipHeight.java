@@ -10,12 +10,7 @@ import java.util.Map;
 
 /**
  * Height method (Max-membership principle).
- *
  * For each output fuzzy set compute its height h_i = max_x mu_i(x).
- * Choose the single z* that has the global maximum membership (the set with largest h_i
- * and the x that attained it). If multiple sets tie, the current implementation picks the
- * first encountered argmax (deterministic iteration order of inferred map).
- *
  * If nothing fires, returns midpoint of the output domain.
  */
 public class MaxMembershipHeight implements DefuzzificationStrategy {

@@ -11,11 +11,6 @@ import java.util.*;
 
 /**
  * Mean of Maximum (MoM) defuzzifier.
- *
- * Expects `inferred` to be a map of outputSetName -> (xString -> membership).
- * It finds the global maximum membership across all sampled x values (all sets),
- * then collects all x where membership >= max - EPS, and returns their arithmetic mean.
- *
  * If no samples exist, returns the mid-point of the output variable domain.
  */
 public class MeanOfMaxMembership implements DefuzzificationStrategy {

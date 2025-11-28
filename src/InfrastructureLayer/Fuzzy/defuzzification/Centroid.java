@@ -12,13 +12,6 @@ import java.util.TreeMap;
 /**
  * Centroid (center of area) computed numerically over sampled inferred data:
  *   z = ( ∑ x * μ_agg(x) ) / ( ∑ μ_agg(x) )
- *
- * Here inferred is a map per-output-set containing sampled (x->μ_set(x)) values.
- * We need to combine sets into aggregated μ_agg(x) = max_over_sets μ_set(x) (Mamdani max-aggregation).
- *
- * This implementation expects that the 'inferred' structure already contains per-set samples where
- * the sampling semantics are the same; it computes μ_agg(x) by taking the maximum across the sets
- * for each sampled x key. If x sampling points differ across sets, numeric keys are parsed and unioned.
  */
 public class Centroid implements DefuzzificationStrategy {
 
