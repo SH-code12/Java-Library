@@ -2,7 +2,8 @@ package DomainLayer.interfaces.NeuralNetwork;
 
 public interface Activation {
 
-    double[] calc(double [] z);
+    double[][] activate(double[][] x);
 
-    double [] deravative(double [] activatedOutput);
+    double[][] derivative(double[][] x);
+
 }
