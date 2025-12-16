@@ -1,7 +1,7 @@
 package DomainLayer.entities.NeuralNetwork;
 
 import DomainLayer.interfaces.NeuralNetwork.Layer;
-import InfrastructureLayer.NeuralNetwork.layers.DenseLayer;
+//import InfrastructureLayer.NeuralNetwork.layers.DenseLayer;
 
 import java.util.ArrayList;
 import java.util.List;
