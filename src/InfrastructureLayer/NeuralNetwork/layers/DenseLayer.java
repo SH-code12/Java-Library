@@ -17,17 +17,36 @@ public class DenseLayer implements Layer {
     private double[] biases;
     private Optimizer optimizer;
 
-    public DenseLayer(int insize, int outsize,Optimizer o) {
+    public DenseLayer(int insize, int outsize,Optimizer o,Activation activationfn) {
        weights = new double[insize][outsize];
        for(int i =0;i<insize;i++){
            for(int j =0;j<outsize;j++)
                weights[i][j] = Math.random();
        }
        this.optimizer = o;
+       this.biases = new double[outsize];
+       this.activationfn = activationfn;
+
     }
 
     @Override
-    public void forward() {
+    public double[] forward(double [] input) {
+        this.lastInput = input;
+        int outsize = weights[0].length;
+        double[] z =new double[outsize];
+        for(int j =0;j<outsize;j++ ){
+            double sum =0;
+            for(int i =0;i< input.length;i++){
+                sum += input[i] *weights[i][j];
+                sum+= biases[j];
+                z[j] = sum;
+
+            }
+        }
+
+        double [] A = activationfn.calc(z);
+        this.lastOutput =A;
+        return A;
 
     }
 
