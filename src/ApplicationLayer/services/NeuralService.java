@@ -1,48 +1,61 @@
 package ApplicationLayer.services;
 
-import DomainLayer.entities.NeuralNetwork.NeuralNetworkModel;
-import DomainLayer.interfaces.NeuralNetwork.Layer;
-import DomainLayer.interfaces.NeuralNetwork.LossFunction;
-
-import java.util.List;
+import DomainLayer.entities.NeuralNetwork.HyperParameters;
+import DomainLayer.entities.NeuralNetwork.RegressionMetrics;
+import InfrastructureLayer.NeuralNetwork.trainer.NNAPI;
+import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 
 public class NeuralService {
+    private NNAPI nnAPI;
+    private DataUtils.TargetNorm targetNorm;
 
-    public LossFunction getLossFunction() {
-        return lossFunction;
+
+    public NeuralService(HyperParameters hyperParams) {
+        this.nnAPI = new NNAPI(hyperParams);
     }
 
-    public void setLossFunction(LossFunction lossFunction) {
-        this.lossFunction = lossFunction;
+    public void enableDebug(boolean flag) {
+        nnAPI.enableDebug(flag);
     }
 
-    private LossFunction lossFunction;
+    public void train(double[][] X, double[][] y, int epochs, int batchSize, double learningRate) {
+        // Normalize target
+//        targetNorm = DataUtils.zscore1D(y);
+//
+//        // Convert normalized y to 2D array
+//        double[][] yNorm = new double[y.length][1];
+//        for (int i = 0; i < y.length; i++) {
+//            yNorm[i][0] = targetNorm.y[i];
+//        }
 
-    public void fit(NeuralNetworkModel nn, double[][] in,double[][] out,int epochs,double lr ){
-        double totalEpochloss =0;
-        for(int epoch=1;epoch<=epochs;epoch++){
-            totalEpochloss =0;
-            for(int sample =0;sample<in.length;sample++){
-                nn.forward();
-                double [] prediction = nn.predict(in[sample]);
-                double loss =  lossFunction.calc_loss(prediction,out[sample]);
-                totalEpochloss += loss;
+        // Pass normalized target to trainer
+        nnAPI.fit(X, y, epochs, batchSize, learningRate);
+    }
 
-                double[]  lossVector = lossFunction.calc_deravtive(prediction, out[sample]);
-                List<Layer> layers = nn.getLayers();
-                for(int i = layers.size()-1;i>=0;i--){
-                Layer ll = layers.get(i);
-                    lossVector = ll.backward(lossVector,lr);
-                }
+    public double[][] predict(double[][] X) {
 
-            }
-            if(epoch%100 ==0) {
-                double avgLoss = totalEpochloss/in.length;
-                System.out.println("Epoch "+ (epoch)+" , average loss is: "+ avgLoss);
+        return nnAPI.predict(X);
+    }
 
+    public RegressionMetrics evaluate(double[][] X, double[][] y) {
+        return nnAPI.evaluate(X, y);
+    }
 
-            }
-        }
+    public void saveModel(String path) throws Exception {
+        nnAPI.saveModel(path);
+    }
+
+    public void loadModel(String path) throws Exception {
+        nnAPI.loadModel(path);
+    }
+
+    public DataUtils.TargetNorm getTargetMeanStd() {
+        return targetNorm;
+    }
+    public void setTargetNorm(DataUtils.TargetNorm targetNorm){
+        this.targetNorm = targetNorm;
 
     }
+
+
 }

@@ -7,18 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NeuralNetworkModel {
-    public void forward(){
-        // NEED TO BE IMPLEMENTED
-    }
-    public double[] predict(double [] in){
-        // NEED TO BE COMPLETED
-        return in;
+    List<Layer> layers;
+    public NeuralNetworkModel() {
+        this.layers = new ArrayList<>();
     }
 
-    public List<Layer> getLayers(){
-        List<Layer> l = new ArrayList<Layer>();
-        // NEED TO BE COMPLETED
 
-        return l;
+    public void addLayer(Layer layer) {
+        layers.add(layer);
+    }
+
+    public List<Layer> getLayers() {
+        return layers;
     }
 }

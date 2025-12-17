@@ -1,85 +1,86 @@
-//package InfrastructureLayer.NeuralNetwork.layers;
-//
-//import DomainLayer.interfaces.NeuralNetwork.Activation;
-//import DomainLayer.interfaces.NeuralNetwork.Layer;
-//import DomainLayer.interfaces.NeuralNetwork.Optimizer;
-//import InfrastructureLayer.NeuralNetwork.util.Matrix;
-//
-//public class DenseLayer implements Layer {
-//
-//    private Activation activationfn;
-//
-//    private double [] lastInput;
-//
-//
-//    private double[] lastOutput;
-//    private double[][] weights;
-//    private double[] biases;
-//    private Optimizer optimizer;
-//
-//    public DenseLayer(int insize, int outsize,Optimizer o,Activation activationfn) {
-//       weights = new double[insize][outsize];
-//       for(int i =0;i<insize;i++){
-//           for(int j =0;j<outsize;j++)
-//               weights[i][j] = Math.random();
-//       }
-//       this.optimizer = o;
-//       this.biases = new double[outsize];
-//       this.activationfn = activationfn;
-//
-//    }
-//
-//    @Override
-//    public double[] forward(double [] input) {
-//        this.lastInput = input;
-//        int outsize = weights[0].length;
-//        double[] z =new double[outsize];
-//        for(int j =0;j<outsize;j++ ){
-//            double sum =0;
-//            for(int i =0;i< input.length;i++){
-//                sum += input[i] *weights[i][j];
-//                sum+= biases[j];
-//                z[j] = sum;
-//
-//            }
-//        }
-//
-//        double [] A = activationfn.activate(z);
-//        this.lastOutput =A;
-//        return A;
-//
-//    }
-//
-//    @Override
-//    public double [] backward(double[] errorMatrixOfnext, double lr) {
-//     double [] grad = activationfn.derivative(lastOutput);
-//     double[] delta = Matrix.multiply(errorMatrixOfnext , grad) ;
-//     // error for previous layer
-//        double []prevError = new double [lastInput.length];
-//        for(int i =0;i<this.lastInput.length;i++){
-//            for(int j =0;j<delta.length;j++){
-//                prevError[i]+= this.weights[i][j] * delta[j];
-//            }
-//        }
-//
-//
-//        // update weights
-//     for(int i =0;i<this.lastInput.length;i++){
-//         for(int j =0;j<delta.length;j++) {
-//             double g = this.lastInput[i] * delta[j];
-//             weights[i][j] = optimizer.applyUpdate(weights[i][j],g,lr);
-//         }
-//
-//     }
-//
-//
-//     // update biases
-//        for(int j =0;j<delta.length;j++){
-//            biases[j] = biases[j]-(lr*delta[j]);
-//        }
-//
-//     return prevError;
-//
-//
-//    }
-//}
+package InfrastructureLayer.NeuralNetwork.layers;
+
+import DomainLayer.interfaces.NeuralNetwork.Activation;
+import DomainLayer.interfaces.NeuralNetwork.Layer;
+import DomainLayer.interfaces.NeuralNetwork.Optimizer;
+import DomainLayer.interfaces.NeuralNetwork.WeightInitializer;
+import InfrastructureLayer.NeuralNetwork.util.Matrix;
+
+import java.util.Arrays;
+
+public class DenseLayer implements Layer {
+    private Activation activation;
+
+    private WeightInitializer weightInitializer;
+    private Optimizer optimizer;
+
+    private double[][] W;
+    private double[] b;
+
+    private double[][] lastInput;
+    private double[][] lastZ;
+
+    public DenseLayer(int in, int out,
+                      Activation activation,
+                      WeightInitializer initializer,
+                      Optimizer optimizer) {
+
+        this.activation = activation;
+        this.weightInitializer = initializer;
+        this.optimizer = optimizer;
+        this.W = weightInitializer.initialize(in, out);
+        this.b = new double[out];
+    }
+    private boolean debug;
+
+    @Override
+    public double[][] forward(double[][] input) {
+        this.lastInput = input;
+
+        double[][] z = Matrix.addRowVector(Matrix.dot(input, W), b);
+
+        if (debug) {
+            System.out.println("Z: " + Arrays.deepToString(lastZ));
+        }
+        this.lastZ = z;
+        return activation.activate(z);
+    }
+    public void setDebug(boolean flag) {
+        this.debug = flag;
+    }
+    @Override
+    public double[][] backward(double[][] gradOutput, double learningRate) {
+
+        // dZ = dA ⊙ activation'(Z)
+        double[][] dZ = Matrix.elementWiseMultiply(gradOutput, activation.derivative(lastZ));
+
+        // dW = Xᵀ · dZ
+        double[][] dW = Matrix.dot(Matrix.transpose(lastInput), dZ);
+
+        // db = sum(dZ)
+        double[] db = Matrix.colSum(dZ);
+
+        // dX = dZ · Wᵀ
+        optimizer.applyUpdate(W, dW, b, db, learningRate);
+        return Matrix.dot(dZ, Matrix.transpose(W));
+    }
+    @Override
+    public double[][] getWeights() {
+        return W;
+    }
+
+    @Override
+    public double[] getBias() {
+        return b;
+    }
+
+    @Override
+    public void setWeights(double[][] W) {
+        this.W = W;
+    }
+
+    @Override
+    public void setBias(double[] b) {
+        this.b = b;
+    }
+}
