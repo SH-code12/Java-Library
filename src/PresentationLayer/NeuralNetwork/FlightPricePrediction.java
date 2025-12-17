@@ -255,9 +255,9 @@ public class FlightPricePrediction {
         // Evaluate
         RegressionMetrics m = service.evaluate(splitX.Xtest, splitY.ytest);
         System.out.println("Model Evaluation:");
-        System.out.printf("MAE : $%.2f%n", m.mae);
-        System.out.printf("RMSE : $%.2f%n", m.rmse);
-        System.out.printf("R²  : %.4f%n", m.r2);
+        System.out.printf("MAE (average absolute difference) : $%.2f%n", m.mae);
+        System.out.printf("RMSE (Root Mean Squared Error): $%.2f%n", m.rmse);
+        System.out.printf("R² (how model is good, variance from target) : %.4f%n", m.r2);
 
         // Save/load
 
