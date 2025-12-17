@@ -13,6 +13,7 @@ public class DenseLayer implements Layer {
 
     private WeightInitializer weightInitializer;
     private Optimizer optimizer;
+    private DebugLogger logger;
 
     private double[][] W;
     private double[] b;
@@ -38,30 +39,36 @@ public class DenseLayer implements Layer {
         this.lastInput = input;
 
         double[][] z = Matrix.addRowVector(Matrix.dot(input, W), b);
-
-        if (debug) {
-            System.out.println("Z: " + Arrays.deepToString(lastZ));
-        }
         this.lastZ = z;
-        return activation.activate(z);
-    }
-    public void setDebug(boolean flag) {
-        this.debug = flag;
+        double[][] a = activation.activate(z);
+
+        if (debug && logger != null) {
+            logger.log("FORWARD LAYER");
+            logger.log("Input: " + Arrays.deepToString(lastInput));
+            logger.log("Z: " + Arrays.deepToString(lastZ));
+            logger.log("Activation: " +  Arrays.deepToString(a));
+
+        }
+
+        return a;
     }
     @Override
     public double[][] backward(double[][] gradOutput, double learningRate) {
 
         // dZ = dA ⊙ activation'(Z)
         double[][] dZ = Matrix.elementWiseMultiply(gradOutput, activation.derivative(lastZ));
-
         // dW = Xᵀ · dZ
         double[][] dW = Matrix.dot(Matrix.transpose(lastInput), dZ);
-
         // db = sum(dZ)
         double[] db = Matrix.colSum(dZ);
-
         // dX = dZ · Wᵀ
         optimizer.applyUpdate(W, dW, b, db, learningRate);
+        if (debug && logger != null) {
+            logger.log("BACKWARD LAYER");
+            logger.log("Grad Output: " + Arrays.deepToString(gradOutput));
+            logger.log("Grad W: " + Arrays.deepToString(dW));
+            logger.log("Grad B: " + Arrays.toString(db));
+        }
         return Matrix.dot(dZ, Matrix.transpose(W));
     }
     @Override
@@ -83,4 +90,14 @@ public class DenseLayer implements Layer {
     public void setBias(double[] b) {
         this.b = b;
     }
+    @Override
+    public void setLogger(DebugLogger logger) {
+        this.logger = logger;
+    }
+    @Override
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+
 }

@@ -4,6 +4,7 @@ import DomainLayer.entities.NeuralNetwork.HyperParameters;
 import DomainLayer.entities.NeuralNetwork.NeuralNetworkModel;
 import DomainLayer.interfaces.NeuralNetwork.Layer;
 import DomainLayer.interfaces.NeuralNetwork.LossFunction;
+import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
 import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class Trainer {
     private final NeuralNetworkModel model;
     private final LossFunction lossFunction;
     private final HyperParameters hyperParams;
+    private DebugLogger debugLogger;
 
     public Trainer(NeuralNetworkModel model, LossFunction lossFunction, HyperParameters hyperParams) {
         this.model = model;
