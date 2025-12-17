@@ -5,6 +5,8 @@ import DomainLayer.entities.NeuralNetwork.NeuralNetworkModel;
 import DomainLayer.entities.NeuralNetwork.RegressionMetrics;
 import DomainLayer.interfaces.NeuralNetwork.Layer;
 import DomainLayer.interfaces.NeuralNetwork.NeuralNetworkAPI;
+import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
+import InfrastructureLayer.NeuralNetwork.layers.DenseLayer;
 import InfrastructureLayer.NeuralNetwork.layers.LayerFactory;
 
 import InfrastructureLayer.NeuralNetwork.util.ModelIO;
@@ -15,8 +17,10 @@ import java.util.List;
 public class NNAPI implements NeuralNetworkAPI {
     private NeuralNetworkModel model;
     private HyperParameters hyperParams;
-    private boolean debug = false;
+    private boolean debug ;
     private Trainer trainer;
+    private DebugLogger logger;
+
 
     public NNAPI(HyperParameters hyperParams) {
         this.hyperParams = hyperParams;
@@ -33,6 +37,7 @@ public class NNAPI implements NeuralNetworkAPI {
         hyperParams.learningRate = learningRate;
         trainer.train(X, y);
     }
+    /// Predict batch
     @Override
     public double[][] predict(double[][] X) {
         double[][] output = X;
@@ -41,6 +46,13 @@ public class NNAPI implements NeuralNetworkAPI {
         }
         return output;
     }
+    @Override
+    public double predictSingle(double[] x) {
+        double[][] input = new double[][] { x };
+        double[][] output = predict(input);
+        return output[0][0];
+    }
+
 
     @Override
     public void saveModel(String path) throws Exception {
@@ -89,6 +101,15 @@ public class NNAPI implements NeuralNetworkAPI {
         m.r2 = 1.0 - (ssRes / ssTot);
 
         return m;
+    }
+    @Override
+    public void setLogger(DebugLogger logger) {
+        this.logger = logger;
+        model.getLayers().forEach(layer -> {
+            if (layer instanceof DenseLayer dl) {
+                dl.setLogger(logger);
+            }
+        });
     }
 
 

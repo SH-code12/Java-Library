@@ -1,6 +1,7 @@
 package DomainLayer.interfaces.NeuralNetwork;
 
 import DomainLayer.entities.NeuralNetwork.RegressionMetrics;
+import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ public interface NeuralNetworkAPI {
     void saveModel(String path) throws Exception;
     void loadModel(String path) throws Exception;
     RegressionMetrics evaluate(double[][] X, double[][] y);
+    double predictSingle(double[] x) ;
+    void setLogger(DebugLogger logger);
 
     void enableDebug(boolean flag);
 }

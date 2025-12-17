@@ -2,12 +2,14 @@ package ApplicationLayer.services;
 
 import DomainLayer.entities.NeuralNetwork.HyperParameters;
 import DomainLayer.entities.NeuralNetwork.RegressionMetrics;
+import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
 import InfrastructureLayer.NeuralNetwork.trainer.NNAPI;
 import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 
 public class NeuralService {
     private NNAPI nnAPI;
     private DataUtils.TargetNorm targetNorm;
+    private DebugLogger debugLogger;
 
 
     public NeuralService(HyperParameters hyperParams) {
@@ -49,4 +51,13 @@ public class NeuralService {
     }
 
 
+    public void setLogger(DebugLogger logger) {
+        this.debugLogger = logger;
+        nnAPI.setLogger(logger);
+
+    }
+
+    public double predictSingle(double[] xTest) {
+        return nnAPI.predictSingle(xTest);
+    }
 }

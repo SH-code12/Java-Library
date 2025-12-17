@@ -1,5 +1,7 @@
 package DomainLayer.interfaces.NeuralNetwork;
 
+import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
+
 public interface Layer {
 
 
@@ -9,4 +11,8 @@ public interface Layer {
     double[] getBias();
     void setWeights(double[][] W);
     void setBias(double[] b);
-}
+    void setLogger(DebugLogger logger) ;
+    void setDebug(boolean debug) ;
+
+
+    }

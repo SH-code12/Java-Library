@@ -15,122 +15,43 @@ import InfrastructureLayer.NeuralNetwork.activations.Tanh;
 import InfrastructureLayer.NeuralNetwork.initializers.HeInitializer;
 import InfrastructureLayer.NeuralNetwork.initializers.RandomUniformInitializer;
 import InfrastructureLayer.NeuralNetwork.initializers.XavierInitializer;
+import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
 import InfrastructureLayer.NeuralNetwork.losses.CrossEntropyLoss;
 import InfrastructureLayer.NeuralNetwork.losses.MSELoss;
 import InfrastructureLayer.NeuralNetwork.optimizers.Adam;
 import InfrastructureLayer.NeuralNetwork.optimizers.SGD;
+import InfrastructureLayer.NeuralNetwork.util.CsvDataLoader;
 import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 import java.util.*;
 
 public class FlightPricePrediction {
     private Scanner sc = new Scanner(System.in);
+    private DebugLogger logger ;
 
     public void run() throws Exception {
         // Load CSV
         System.out.println("Loading Data...\n");
-        List<String[]> rawData = new ArrayList<>();
 
         String dataPath = "D:/SHaHD/4th_first term/Soft Computing/Assignments/Java_Library/java-library/src/resources/Clean_Dataset.csv";
-        try (BufferedReader br = new BufferedReader(new FileReader(dataPath))) {
-            String line;
-            boolean headerSkipped = false;
-            while ((line = br.readLine()) != null) {
-                if (!headerSkipped) { headerSkipped = true; continue; }
-                if (line.trim().isEmpty()) continue;
-                rawData.add(line.split(","));
-            }
-        }
+        List<String[]> rawData = CsvDataLoader.load(
+                dataPath,
+                true,
+                50_000,
+                42
+        );
 
-        System.out.println("Data Loaded. Total rows: " + rawData.size());
-        // Sample data for faster runtime
-        int sampleSize = Math.min(50000, rawData.size());
-        Random rnd = new Random(42);
-        List<String[]> sampledData = new ArrayList<>(sampleSize);
-        for (int i = 0; i < sampleSize; i++) {
-            sampledData.add(rawData.get(rnd.nextInt(rawData.size())));
-        }
-        rawData = sampledData;
-        System.out.println("Sampled rows: " + rawData.size());
+        FlightPreprocessor.Result prep = FlightPreprocessor.preprocess(rawData);
 
-        // Build vocabularies for categorical features
-        Set<String> airlines = new HashSet<>();
-        Set<String> sourceCities = new HashSet<>();
-        Set<String> destCities = new HashSet<>();
-        Set<String> classes = new HashSet<>();
-        Set<String> stops = new HashSet<>();
-
-        for (String[] row : rawData) {
-            airlines.add(row[1]);
-            sourceCities.add(row[3]);
-            destCities.add(row[7]);
-            classes.add(row[8]);
-            stops.add(row[5]);
-        }
-
-        List<String> airlineVocab = new ArrayList<>(airlines);
-        List<String> sourceVocab = new ArrayList<>(sourceCities);
-        List<String> destVocab = new ArrayList<>(destCities);
-        List<String> classVocab = new ArrayList<>(classes);
-        List<String> stopsVocab = new ArrayList<>(stops);
-
-        // Prepare features and targets
-        List<double[]> featuresList = new ArrayList<>();
-        List<Double> targetsList = new ArrayList<>();
-
-        for (String[] row : rawData) {
-            List<Double> featureRow = new ArrayList<>();
-
-            // One-hot encode categorical features
-            double[] airlineOH = DataUtils.oneHot(row[1], airlineVocab);
-            double[] sourceOH = DataUtils.oneHot(row[3], sourceVocab);
-            double[] destOH = DataUtils.oneHot(row[7], destVocab);
-            double[] classOH = DataUtils.oneHot(row[8], classVocab);
-            double[] stopsOH = DataUtils.oneHot(row[5], stopsVocab);
-
-            for (double v : airlineOH) featureRow.add(v);
-            for (double v : sourceOH) featureRow.add(v);
-            for (double v : destOH) featureRow.add(v);
-            for (double v : classOH) featureRow.add(v);
-            for (double v : stopsOH) featureRow.add(v);
-
-            // Numeric features: duration, days_left
-            featureRow.add(Double.parseDouble(row[9]));
-            featureRow.add(Double.parseDouble(row[10]));
-
-            featuresList.add(featureRow.stream().mapToDouble(d -> d).toArray());
-            targetsList.add(Double.parseDouble(row[11])); // price
-        }
-
-        double[][] X = featuresList.toArray(new double[0][]);
-        double[][] yRaw = new double[targetsList.size()][1];
-        for (int i = 0; i < targetsList.size(); i++) yRaw[i][0] = targetsList.get(i);
-
-        System.out.println("Validate Data..\n");
-        // Validate features
-        DataUtils.validate(X);
-
-
-        // Normalize features
-        System.out.println("Normalizing features...");
-        DataUtils.Norm norm = DataUtils.zscore(X);
-        X = norm.X;
-        // Normalize targets
-        System.out.println("Normalizing target...");
-        DataUtils.TargetNorm targetNorm = DataUtils.zscore1D(yRaw);
-        double[][] yNorm = new double[yRaw.length][1];
-        for (int i = 0; i < yRaw.length; i++) yNorm[i][0] = targetNorm.y[i];
-
-
-        // Split
         System.out.println("Splitting data...");
-        DataUtils.Split splitX = DataUtils.trainTestSplit(X, X, 0.2, 42, true);
-        DataUtils.Split splitY = DataUtils.trainTestSplit(yNorm, yNorm, 0.2, 42, true);
-        DataUtils.Split splitYRaw = DataUtils.trainTestSplit(yRaw, yRaw, 0.2, 42, true);
+        DataUtils.Split splitX = DataUtils.trainTestSplit(prep.X, prep.X, 0.2, 42, true);
 
+        System.out.println("Splitting Features...");
+
+        DataUtils.Split splitY = DataUtils.trainTestSplit(prep.yNorm, prep.yNorm, 0.2, 42, true);
+
+        DataUtils.Split splitYRaw = DataUtils.trainTestSplit(prep.yRaw, prep.yRaw, 0.2, 42, true);
 
         // User inputs
         System.out.println("Enter epochs(100-500):");
@@ -192,7 +113,7 @@ public class FlightPricePrediction {
                 default -> new XavierInitializer();
             };
 
-            int inputSize = (i == 0) ? X[0].length : layerConfigs.get(i-1).outputSize;
+            int inputSize = (i == 0) ? prep.X[0].length : layerConfigs.get(i-1).outputSize;
 
             layerConfigs.add(new LayerConfig(inputSize, neurons, activation, initializer,optimizer));
 
@@ -201,25 +122,50 @@ public class FlightPricePrediction {
         HyperParameters hp = new HyperParameters(layerConfigs, optimizer, lossFunction, epochs, batchSize, lr);
 
         // Service
-        System.out.println("Start Debugging ...\n");
-
         NeuralService service = new NeuralService(hp);
-        service.enableDebug(false);
+        /// Debugging
+        System.out.println("Enter Status of Debug:\n" +
+                "1.ON \n" +
+                "2.OFF(Recommended) \n");
+        int debugMood = sc.nextInt();
+        switch (debugMood){
+            case 1:
+                System.out.println("Debug Mood: ON");
+                logger = new DebugLogger(
+                        "D:/SHaHD/4th_first term/Soft Computing/Assignments/Java_Library/java-library/src/resources/debug_logs.txt",
+                        true
+                );
+                service.setLogger(logger);
+                service.enableDebug(true);
 
+                break;
+            case 2:
+                System.out.println("Debug Mood: OFF");
+                service.enableDebug(false);
+                break;
 
-        // Train
+            default:
+                System.out.println("Invalid choice, debug OFF by default");
+                service.enableDebug(false);
+        }
+
+        // Training
         System.out.println("Training...");
-        service.setTargetNorm(targetNorm);
-
+        service.setTargetNorm(prep.targetNorm);
         service.train(splitX.Xtrain, splitY.ytrain, epochs, batchSize, lr);
+        /// Loging
+        logger.close();
+        System.out.println("Logs Saved Successfully ");
 
-        // Predict
+        //// Prediction
+        System.out.println("Prediction...");
+
         double[][] predNorm = service.predict(splitX.Xtest);
 
         // Denormalize predictions
         double[][] pred = new double[predNorm.length][1];
         for (int i = 0; i < predNorm.length; i++) {
-            pred[i][0] = predNorm[i][0] * targetNorm.std + targetNorm.mean;
+            pred[i][0] = predNorm[i][0] * prep.targetNorm.std + prep.targetNorm.mean;
         }
         System.out.println("Predictions on test set (denormalized):");
         for (int i = 0; i < Math.min(5, pred.length); i++) {
@@ -239,10 +185,26 @@ public class FlightPricePrediction {
         System.out.println("Model Evaluation:");
         System.out.printf("MAE (average absolute difference) : $%.2f%n", m.mae);
         System.out.printf("RMSE (Root Mean Squared Error): $%.2f%n", m.rmse);
-        System.out.printf("R² (how model is good, variance from target) : %.4f%n", m.r2);
+        System.out.printf("R² (How model is good, variance from target) : %.4f%n", m.r2);
+
+        //// Single input
+        System.out.println("\nTesting predictSingle()...\n");
+    // Take one test sample (already normalized)
+        double[] xTest = splitX.Xtest[0];
+    // Predict (normalized output)
+        double predNormSingle = service.predictSingle(xTest);
+    // Denormalize
+        double predSingle = predNormSingle * prep.targetNorm.std + prep.targetNorm.mean;
+    // Actual price (raw, not normalized)
+        double actual = splitYRaw.ytest[0][0];
+
+        System.out.println("Single prediction test:");
+        System.out.println("Predicted price: $" + String.format("%,.0f", predSingle));
+        System.out.println("Actual price   : $" + String.format("%,.0f", actual));
+        System.out.println("Absolute error : $" + String.format("%,.0f",
+                Math.abs(predSingle - actual)));
 
         // Save/load
-
         service.saveModel("D:/SHaHD/4th_first term/Soft Computing/Assignments/Java_Library/java-library/src/resources/model.nn");
         service.loadModel("D:/SHaHD/4th_first term/Soft Computing/Assignments/Java_Library/java-library/src/resources/model.nn");
         System.out.println("Model saved and loaded successfully.");
