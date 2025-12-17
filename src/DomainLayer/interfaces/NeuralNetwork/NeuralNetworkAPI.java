@@ -9,7 +9,6 @@ public interface NeuralNetworkAPI {
     double[][] predict(double[][] X);           // returns regression outputs
     void saveModel(String path) throws Exception;
     void loadModel(String path) throws Exception;
-//    double evaluate(double[][] X, double[][] y);
     RegressionMetrics evaluate(double[][] X, double[][] y);
 
     void enableDebug(boolean flag);

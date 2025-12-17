@@ -6,10 +6,7 @@ import DomainLayer.entities.NeuralNetwork.RegressionMetrics;
 import DomainLayer.interfaces.NeuralNetwork.Layer;
 import DomainLayer.interfaces.NeuralNetwork.NeuralNetworkAPI;
 import InfrastructureLayer.NeuralNetwork.layers.LayerFactory;
-import InfrastructureLayer.NeuralNetwork.losses.MSELoss;
-import InfrastructureLayer.NeuralNetwork.trainer.Trainer;
 
-import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 import InfrastructureLayer.NeuralNetwork.util.ModelIO;
 
 
@@ -94,17 +91,6 @@ public class NNAPI implements NeuralNetworkAPI {
         return m;
     }
 
-//    public double evaluate(double[][] X, double[][] y) {
-//        double[][] pred = predict(X);
-//        double total = 0;
-//        for (int i = 0; i < pred.length; i++) {
-//            for (int j = 0; j < pred[0].length; j++) {
-//                double diff = pred[i][j] - y[i][j];
-//                total += diff * diff;
-//            }
-//        }
-//        return total / pred.length;
-//    }
 
     @Override
     public void enableDebug(boolean flag) {

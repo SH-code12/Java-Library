@@ -23,8 +23,7 @@ import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.*;
 
 public class FlightPricePrediction {
@@ -132,23 +131,6 @@ public class FlightPricePrediction {
         DataUtils.Split splitY = DataUtils.trainTestSplit(yNorm, yNorm, 0.2, 42, true);
         DataUtils.Split splitYRaw = DataUtils.trainTestSplit(yRaw, yRaw, 0.2, 42, true);
 
-//        // Normalize
-//        System.out.println("Start Normalization...\n");
-//        DataUtils.TargetNorm tn = DataUtils.zscore1D(y);
-//        double[][] yNorm = new double[y.length][1];
-//        for (int i = 0; i < y.length; i++) yNorm[i][0] = tn.y[i];
-//
-//// Split normalized targets
-//        DataUtils.Split split = DataUtils.trainTestSplit(X, yNorm, 0.2, 42, true);
-//
-//        DataUtils.Norm norm = DataUtils.zscore(X);
-//        X = norm.X;
-//        System.out.println("End Normalization\n");
-//
-//        // Split
-//        System.out.println("Start Split...\n");
-//        DataUtils.Split split = DataUtils.trainTestSplit(X, y, 0.2, 42, true);
-//        System.out.println("End Split \n");
 
         // User inputs
         System.out.println("Enter epochs(100-500):");
@@ -227,7 +209,7 @@ public class FlightPricePrediction {
 
         // Train
         System.out.println("Training...");
-        service.setTargetNorm(targetNorm); // You can add a setter in NeuralService
+        service.setTargetNorm(targetNorm);
 
         service.train(splitX.Xtrain, splitY.ytrain, epochs, batchSize, lr);
 

@@ -19,16 +19,7 @@ public class NeuralService {
     }
 
     public void train(double[][] X, double[][] y, int epochs, int batchSize, double learningRate) {
-        // Normalize target
-//        targetNorm = DataUtils.zscore1D(y);
-//
-//        // Convert normalized y to 2D array
-//        double[][] yNorm = new double[y.length][1];
-//        for (int i = 0; i < y.length; i++) {
-//            yNorm[i][0] = targetNorm.y[i];
-//        }
 
-        // Pass normalized target to trainer
         nnAPI.fit(X, y, epochs, batchSize, learningRate);
     }
 
