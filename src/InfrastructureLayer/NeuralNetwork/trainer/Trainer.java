@@ -14,7 +14,6 @@ public class Trainer {
     private final NeuralNetworkModel model;
     private final LossFunction lossFunction;
     private final HyperParameters hyperParams;
-    private DebugLogger debugLogger;
 
     public Trainer(NeuralNetworkModel model, LossFunction lossFunction, HyperParameters hyperParams) {
         this.model = model;
