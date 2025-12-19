@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface NeuralNetworkAPI {
     void fit(double[][] X, double[][] y, int epochs, int batchSize, double learningRate);
+    double[] getLastLosses();
     double[][] predict(double[][] X);           // returns regression outputs
     void saveModel(String path) throws Exception;
     void loadModel(String path) throws Exception;
@@ -15,4 +16,5 @@ public interface NeuralNetworkAPI {
     void setLogger(DebugLogger logger);
 
     void enableDebug(boolean flag);
-}
+
+    }

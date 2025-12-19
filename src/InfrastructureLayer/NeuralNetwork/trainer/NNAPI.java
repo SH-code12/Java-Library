@@ -37,6 +37,10 @@ public class NNAPI implements NeuralNetworkAPI {
         hyperParams.learningRate = learningRate;
         trainer.train(X, y);
     }
+    @Override
+    public double[] getLastLosses() {
+        return trainer.getLastLosses();
+    }
     /// Predict batch
     @Override
     public double[][] predict(double[][] X) {

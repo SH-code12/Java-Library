@@ -20,8 +20,10 @@ import InfrastructureLayer.NeuralNetwork.losses.CrossEntropyLoss;
 import InfrastructureLayer.NeuralNetwork.losses.MSELoss;
 import InfrastructureLayer.NeuralNetwork.optimizers.Adam;
 import InfrastructureLayer.NeuralNetwork.optimizers.SGD;
+import InfrastructureLayer.NeuralNetwork.trainer.Trainer;
 import InfrastructureLayer.NeuralNetwork.util.CsvDataLoader;
 import InfrastructureLayer.NeuralNetwork.util.DataUtils;
+import InfrastructureLayer.NeuralNetwork.util.Plot;
 
 
 import java.util.*;
@@ -153,6 +155,11 @@ public class FlightPricePrediction {
         System.out.println("Training...");
         service.setTargetNorm(prep.targetNorm);
         service.train(splitX.Xtrain, splitY.ytrain, epochs, batchSize, lr);
+        /// For Graph
+        double[] losses = service.getLastLosses();
+        // Save the curve as PNG
+        Plot.saveLossCurve(losses, "D:/SHaHD/4th_first term/Soft Computing/Assignments/Java_Library/java-library/src/resources/training_loss.png");
+        System.out.println("Graph Saved At resources/training_loss.png \n");
         /// Debugging and Logining
 
         if(debugMood == 1){
