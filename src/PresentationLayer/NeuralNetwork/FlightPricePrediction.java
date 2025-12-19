@@ -35,7 +35,7 @@ public class FlightPricePrediction {
         System.out.println("Loading Data...\n");
 
         String dataPath = "D:/SHaHD/4th_first term/Soft Computing/Assignments/Java_Library/java-library/src/resources/Clean_Dataset.csv";
-        List<String[]> rawData = CsvDataLoader.load(
+        List<String[]> rawData = CsvDataLoader.loadAndClean(
                 dataPath,
                 true,
                 50_000,
