@@ -4,8 +4,6 @@ import DomainLayer.entities.NeuralNetwork.HyperParameters;
 import DomainLayer.entities.NeuralNetwork.NeuralNetworkModel;
 import DomainLayer.interfaces.NeuralNetwork.Layer;
 import DomainLayer.interfaces.NeuralNetwork.LossFunction;
-import InfrastructureLayer.NeuralNetwork.layers.DebugLogger;
-import InfrastructureLayer.NeuralNetwork.util.DataUtils;
 
 import java.util.List;
 import java.util.Arrays;
@@ -14,6 +12,7 @@ public class Trainer {
     private final NeuralNetworkModel model;
     private final LossFunction lossFunction;
     private final HyperParameters hyperParams;
+    private double[] lastLosses; // store last training losses
 
     public Trainer(NeuralNetworkModel model, LossFunction lossFunction, HyperParameters hyperParams) {
         this.model = model;
@@ -28,7 +27,7 @@ public class Trainer {
 
         int m = X.length;
         int steps = (int) Math.ceil((double) m / batchSize);
-        double[] losses = new double[epochs];
+        lastLosses = new double[epochs];
         List<Layer> layers = model.getLayers();
 
         for (int e = 0; e < epochs; e++) {
@@ -61,11 +60,14 @@ public class Trainer {
                     grad = layers.get(i).backward(grad, lr);
             }
 
-            losses[e] = epochLoss / steps;
-            System.out.println("Epoch " + (e + 1) + " Loss: " + losses[e]);
-
+            lastLosses[e] = epochLoss / steps;
+            System.out.println("Epoch " + (e + 1) + " Loss: " + lastLosses[e]);
         }
 
-        return losses;
+        return lastLosses;
+    }
+
+    public double[] getLastLosses() {
+        return lastLosses;
     }
 }

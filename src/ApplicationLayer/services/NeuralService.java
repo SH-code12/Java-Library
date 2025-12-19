@@ -60,4 +60,8 @@ public class NeuralService {
     public double predictSingle(double[] xTest) {
         return nnAPI.predictSingle(xTest);
     }
+    public double[] getLastLosses() {
+        return nnAPI.getLastLosses();
+    }
+
 }
