@@ -153,9 +153,15 @@ public class FlightPricePrediction {
         System.out.println("Training...");
         service.setTargetNorm(prep.targetNorm);
         service.train(splitX.Xtrain, splitY.ytrain, epochs, batchSize, lr);
-        /// Loging
-        logger.close();
-        System.out.println("Logs Saved Successfully ");
+        /// Debugging and Logining
+
+        if(debugMood == 1){
+            logger.close();
+            System.out.println("Logs Saved Successfully ");
+        }else{
+            System.out.println("\nLogs Not Saved ,Debugging is OFF \n");
+
+        }
 
         //// Prediction
         System.out.println("Prediction...");
