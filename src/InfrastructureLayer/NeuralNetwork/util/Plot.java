@@ -7,13 +7,6 @@ import javax.imageio.ImageIO;
 
 public class Plot {
 
-    /**
-     * Draws the loss curve and saves it as a PNG file
-     *
-     * @param losses array of loss values
-     * @param filename path to save PNG
-     * @throws Exception if saving fails
-     */
     public static void saveLossCurve(double[] losses, String filename) throws Exception {
         if (losses == null || losses.length == 0)
             throw new IllegalArgumentException("Loss array is empty");
